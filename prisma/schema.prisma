@@ -47,6 +47,7 @@ model JobPost {
   id String @id @default(uuid())
   idAluno String 
   aluno User @relation(fields: [idAluno],references: [id])
+  curso Curso
   descricao String
   valor Float
   isClosed Boolean @default(false)

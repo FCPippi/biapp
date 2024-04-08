@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Response } from '@nestjs/common';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
   async create(idAluno: string, body: CreateJobDtoSchema) {
-    const { descricao, valor } = body;
+    const { descricao, valor, curso } = body;
 
     const job = await this.prisma.jobPost.create({
-      data: { idAluno, descricao, valor },
+      data: { idAluno, descricao, valor, curso },
     });
 
     await this.prisma.user.update({
@@ -22,15 +23,21 @@ export class JobsService {
     });
   }
 
-  findAll() {
-    return `This action returns all jobs`;
+  async findAll() {
+    const jobs = await this.prisma.user.findMany();
+    return jobs;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(idAluno: string) : Promise<User> { 
+    const user = await this.prisma.user.findUnique({where: {id: idAluno}});
+    if (!user) {
+      throw new HttpException("Usuário não encontrado",HttpStatus.BAD_REQUEST);
+    }
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} job`;
+  async remove(idAluno: string) : Promise<User> {
+    const user = await this.findOne(idAluno) as Prisma.UserWhereUniqueInput;
+    return this.prisma.user.delete({where: user})
   }
 }
