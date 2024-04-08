@@ -2,24 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 
-
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
   async create(idAluno: string, body: CreateJobDtoSchema) {
     const { descricao, valor } = body;
-    
+
     const job = await this.prisma.jobPost.create({
-      data: { idAluno, descricao, valor }
+      data: { idAluno, descricao, valor },
     });
 
     await this.prisma.user.update({
       where: { id: idAluno },
-      data: { 
+      data: {
         jobPosts: {
-          connect: { id: job.id } 
-        }
-      }
+          connect: { id: job.id },
+        },
+      },
     });
   }
 

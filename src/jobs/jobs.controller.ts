@@ -4,14 +4,13 @@ import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { User } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-
 @ApiBearerAuth()
 @Controller('jobs')
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
-  create(@User('id') user: string ,@Body() createJobDto: CreateJobDtoSchema) {
+  create(@User('id') user: string, @Body() createJobDto: CreateJobDtoSchema) {
     return this.jobsService.create(user, createJobDto);
   }
 

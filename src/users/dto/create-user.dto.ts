@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const CreateAccountDto = z.object({
   name: z.string(),
@@ -6,12 +6,8 @@ export const CreateAccountDto = z.object({
   password: z.string(),
   birthdate: z.string(),
   role: z.enum(['USER', 'ADMIN']),
-  curso: z.enum([
-    'EXATAS',
-    'HUMANAS',
-    'BIOLOGICAS',
-  ]),
+  curso: z.enum(['EXATAS', 'HUMANAS', 'BIOLOGICAS']),
   gender: z.enum(['HOMEM', 'MULHER', 'OUTRO']),
-})
+});
 
-export type CreateAccountDtoSchema = z.infer<typeof CreateAccountDto>
+export type CreateAccountDtoSchema = z.infer<typeof CreateAccountDto>;
