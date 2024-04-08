@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { JobsService } from './jobs.service';
-import { CreateJobDto } from './dto/create-job.dto';
-import { UpdateJobDto } from './dto/update-job.dto';
+import { CreateJobDtoSchema } from './dto/create-job.dto';
+import { User } from 'src/users/decorators/user.decorator';
 
 @Controller('jobs')
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Post()
-  create(@Body() createJobDto: CreateJobDto) {
-    return this.jobsService.create(createJobDto);
+  create(@User('id') user: string ,@Body() createJobDto: CreateJobDtoSchema) {
+    return this.jobsService.create(user, createJobDto);
   }
 
   @Get()
@@ -20,11 +20,6 @@ export class JobsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.jobsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobsService.update(+id, updateJobDto);
   }
 
   @Delete(':id')
