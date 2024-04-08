@@ -31,7 +31,7 @@ export class JobsService {
   async findOne(idJob: string): Promise<JobPost> {
     const job = await this.prisma.jobPost.findUnique({ where: { id: idJob } });
     if (!job) {
-      throw new HttpException('Usuário não encontrado', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Job não encontrado', HttpStatus.BAD_REQUEST);
     }
     return job;
   }

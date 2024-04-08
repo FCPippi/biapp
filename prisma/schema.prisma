@@ -40,7 +40,28 @@ model User {
   role Role @default(USER)
   curso Curso
   gender Gender
+  
+  // Adicione estes campos para completar as relações
+  ratingsGiven Rating[] @relation("ratingsGiven")
+  ratingsReceived Rating[] @relation("ratingsReceived")
+
   jobPosts JobPost[]
+}
+model Rating {
+  id String @id @default(uuid())
+  value Int
+  createdAt DateTime @default(now())
+
+  // Relaciona a avaliação ao usuário que a deu
+  authorId String
+  author User @relation("ratingsGiven", fields: [authorId], references: [id])
+
+  // Relaciona a avaliação ao usuário que a recebeu
+  recipientId String
+  recipient User @relation("ratingsReceived", fields: [recipientId], references: [id])
+
+  @@index([authorId])
+  @@index([recipientId])
 }
 
 model JobPost {
@@ -50,5 +71,7 @@ model JobPost {
   curso Curso
   descricao String
   valor Float
+  
   isClosed Boolean @default(false)
 }
+
