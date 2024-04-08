@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { JobsController } from './jobs.controller';
-import { AuthMiddleware } from 'src/auth/auth.middleware';
+import { AuthMiddleware } from 'src/shared/auth/auth.middleware';
 
 @Module({
   controllers: [JobsController],
