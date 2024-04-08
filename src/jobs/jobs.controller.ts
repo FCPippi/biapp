@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { User } from 'src/users/decorators/user.decorator';
@@ -27,7 +36,6 @@ export class JobsController {
     };
     return this.jobsService.findMany(params);
   }
-
 
   @Post()
   create(@User('id') user: string, @Body() createJobDto: CreateJobDtoSchema) {

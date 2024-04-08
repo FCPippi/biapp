@@ -34,7 +34,6 @@ export class UsersController {
     return this.userService.findMany(params);
   }
 
-
   @Post()
   create(@Body() createUserDto: CreateAccountDtoSchema) {
     return this.userService.create(createUserDto);

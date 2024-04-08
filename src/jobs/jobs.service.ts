@@ -28,10 +28,10 @@ export class JobsService {
     return jobs;
   }
 
-  async findOne(idJob: string) : Promise<JobPost> { 
-    const job = await this.prisma.jobPost.findUnique({where: {id: idJob}});
+  async findOne(idJob: string): Promise<JobPost> {
+    const job = await this.prisma.jobPost.findUnique({ where: { id: idJob } });
     if (!job) {
-      throw new HttpException("Usuário não encontrado",HttpStatus.BAD_REQUEST);
+      throw new HttpException('Usuário não encontrado', HttpStatus.BAD_REQUEST);
     }
     return job;
   }
@@ -53,8 +53,8 @@ export class JobsService {
     });
   }
 
-  async remove(idJob: string) : Promise<JobPost> {
-    const job = await this.findOne(idJob) as Prisma.JobPostWhereUniqueInput;
-    return this.prisma.jobPost.delete({where: job})
+  async remove(idJob: string): Promise<JobPost> {
+    const job = (await this.findOne(idJob)) as Prisma.JobPostWhereUniqueInput;
+    return this.prisma.jobPost.delete({ where: job });
   }
 }
