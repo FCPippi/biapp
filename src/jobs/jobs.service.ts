@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { JobPost, Prisma, User } from '@prisma/client';
+import { JobPost, Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
@@ -34,6 +34,23 @@ export class JobsService {
       throw new HttpException("Usuário não encontrado",HttpStatus.BAD_REQUEST);
     }
     return job;
+  }
+
+  async findMany(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.JobPostWhereUniqueInput;
+    where?: Prisma.JobPostWhereInput;
+    orderBy?: Prisma.JobPostOrderByWithRelationInput;
+  }): Promise<JobPost[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.jobPost.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   async remove(idJob: string) : Promise<JobPost> {

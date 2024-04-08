@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -36,7 +37,7 @@ export class UsersService {
     });
   }
 
-  async users(params: {
+  async findMany(params: {
     skip?: number;
     take?: number;
     cursor?: Prisma.UserWhereUniqueInput;
