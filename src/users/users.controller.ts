@@ -3,14 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
+import { UserLogged } from './decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -35,7 +33,16 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() createUserDto: CreateAccountDtoSchema) {
+  async create(@Body() createUserDto: CreateAccountDtoSchema) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('/rating')
+  async rateUser(
+    @UserLogged('id') userFrom: string,
+    userTo: string,
+    value: number,
+  ) {
+    return this.userService.rateUser(userFrom, userTo, Math.floor(value));
   }
 }

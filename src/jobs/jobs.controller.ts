@@ -10,9 +10,8 @@ import {
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
-import { User } from 'src/users/decorators/user.decorator';
+import { UserLogged } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { JobPost, Prisma } from '@prisma/client';
 
 @ApiBearerAuth()
 @Controller('jobs')
@@ -38,7 +37,10 @@ export class JobsController {
   }
 
   @Post()
-  create(@User('id') user: string, @Body() createJobDto: CreateJobDtoSchema) {
+  create(
+    @UserLogged('id') user: string,
+    @Body() createJobDto: CreateJobDtoSchema,
+  ) {
     return this.jobsService.create(user, createJobDto);
   }
 

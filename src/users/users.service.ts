@@ -1,4 +1,9 @@
-import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
@@ -56,19 +61,21 @@ export class UsersService {
 
   async findById(userId: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if(!user) {
+    if (!user) {
       throw new HttpException('User não encontrado', HttpStatus.BAD_REQUEST);
     }
     return user;
   }
 
-  async rateUser(authorId: string, recipientId: string, value: number): Promise<Rating> {
-    // Verifica se o autor e o receptor são o mesmo usuário
+  async rateUser(
+    authorId: string,
+    recipientId: string,
+    value: number,
+  ): Promise<Rating> {
     if (authorId === recipientId) {
-      throw new Error("Um usuário não pode se avaliar.");
+      throw new Error('Um usuário não pode se avaliar.');
     }
 
-    // Cria a avaliação no banco de dados
     const rating = await this.prisma.rating.create({
       data: {
         authorId,
@@ -77,25 +84,24 @@ export class UsersService {
       },
     });
 
-    const userGiven = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: { id: recipientId },
       data: {
         ratingsReceived: {
-          connect: { id: rating.id }, // Supondo que `ratingId` é o ID da nova avaliação
+          connect: { id: rating.id },
         },
       },
     });
 
-    const userRating = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: { id: recipientId },
       data: {
         ratingsGiven: {
-          connect: { id: rating.id }, // Supondo que `ratingId` é o ID da nova avaliação
+          connect: { id: rating.id },
         },
       },
-    })
+    });
 
     return rating;
   }
-  
 }
