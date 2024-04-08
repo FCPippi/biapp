@@ -11,7 +11,7 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  async getUsers(
+  async getJobs(
     @Query('skip', ParseIntPipe) skip?: number,
     @Query('take', ParseIntPipe) take?: number,
     @Query('cursor') cursor?: string,
