@@ -48,8 +48,6 @@ export class JobsController {
     return this.jobsService.create(userId, userCurso, createJobDto);
   }
 
-
-
   @Get()
   findAll() {
     return this.jobsService.findAll();
@@ -61,12 +59,16 @@ export class JobsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.jobsService.remove(id);
+  remove(@UserLogged('id') userId: string, @Param('id') id: string) {
+    return this.jobsService.remove(userId, id);
   }
 
   @Put(':id')
-  updateJob(@UserLogged('id') userId: string, @Param('id') jobId: string, @Body() updateJobDto: UpdateJobDtoSchema) {
+  updateJob(
+    @UserLogged('id') userId: string,
+    @Param('id') jobId: string,
+    @Body() updateJobDto: UpdateJobDtoSchema,
+  ) {
     return this.jobsService.updateJob(userId, jobId, updateJobDto);
   }
 }

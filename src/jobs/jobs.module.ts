@@ -16,6 +16,10 @@ export class JobsModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'articles', method: RequestMethod.POST });
+      .forRoutes(
+        { path: 'jobs/*', method: RequestMethod.POST },
+        { path: 'jobs/*', method: RequestMethod.PUT },
+        { path: 'jobs/*', method: RequestMethod.DELETE },
+      );
   }
 }
