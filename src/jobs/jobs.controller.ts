@@ -7,12 +7,14 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  Put,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Curso } from '@prisma/client';
+import { UpdateJobDtoSchema } from './dto/update-job.dto';
 
 @ApiBearerAuth()
 @Controller('jobs')
@@ -46,6 +48,8 @@ export class JobsController {
     return this.jobsService.create(userId, userCurso, createJobDto);
   }
 
+
+
   @Get()
   findAll() {
     return this.jobsService.findAll();
@@ -59,5 +63,10 @@ export class JobsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.jobsService.remove(id);
+  }
+
+  @Put(':id')
+  updateJob(@UserLogged('id') userId: string, @Param('id') jobId: string, @Body() updateJobDto: UpdateJobDtoSchema) {
+    return this.jobsService.updateJob(userId, jobId, updateJobDto);
   }
 }

@@ -1,5 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
+import { UpdateJobDtoSchema } from './dto/update-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Curso, JobPost, Prisma } from '@prisma/client';
 
@@ -56,5 +57,24 @@ export class JobsService {
   async remove(idJob: string): Promise<JobPost> {
     const job = (await this.findOne(idJob)) as Prisma.JobPostWhereUniqueInput;
     return this.prisma.jobPost.delete({ where: job });
+  }
+
+  async updateJob(userId: string, jobId: string, updateJobDto: UpdateJobDtoSchema) {
+    const job = await this.prisma.jobPost.findUnique({
+      where: { id: jobId },
+    });
+
+    if (!job) {
+      throw new NotFoundException(`Job with ID "${jobId}" not found`);
+    }
+
+    if (job.idAluno !== userId) {
+      throw new UnauthorizedException("You don't have permission to update this job");
+    }
+
+    return this.prisma.jobPost.update({
+      where: { id: jobId },
+      data: updateJobDto,
+    });
   }
 }
