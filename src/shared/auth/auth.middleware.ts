@@ -11,7 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const publicKey = fs.readFileSync(
-      '/workspaces/biapp/public_key.pem',
+      '/workspaces/biapp/keys/public_key.pem',
       'utf-8',
     );
     const authHeaders = req.headers.authorization;

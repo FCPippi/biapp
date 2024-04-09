@@ -14,7 +14,7 @@ export type TokenPayload = z.infer<typeof tokenPayloadSchema>;
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     const publicKey = fs.readFileSync(
-      '/workspaces/biapp/public_key.pem',
+      '/workspaces/biapp/keys/public_key.pem',
       'utf-8',
     );
 
