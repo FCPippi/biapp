@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { JobPost, Prisma } from '@prisma/client';
+import { Curso, JobPost, Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
-  async create(idAluno: string, body: CreateJobDtoSchema) {
-    const { descricao, valor, curso } = body;
+  async create(idAluno: string, curso: Curso, body: CreateJobDtoSchema) {
+    const { descricao, valor } = body;
 
     const job = await this.prisma.jobPost.create({
       data: { idAluno, descricao, valor, curso },
