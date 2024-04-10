@@ -92,7 +92,7 @@ export class UsersService {
     authorId: string,
     rateUserDto: RateAccountDtoSchema,
   ): Promise<Rating> {
-    const { recipientId, value } = rateUserDto;
+    const { recipientId, value, comment } = rateUserDto;
 
     if (authorId === recipientId) {
       throw new Error('Um usuário não pode se avaliar.');
@@ -103,6 +103,7 @@ export class UsersService {
         authorId,
         recipientId,
         value,
+        comment
       },
     });
 

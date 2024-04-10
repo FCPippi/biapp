@@ -53,6 +53,8 @@ model Rating {
   recipientId String
   recipient   User   @relation("ratingsReceived", fields: [recipientId], references: [id])
 
+  comment String?
+
   @@index([authorId])
   @@index([recipientId])
 }
