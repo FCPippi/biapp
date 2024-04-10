@@ -31,12 +31,12 @@ export class JobsService {
   }
 
   async findAll() {
-    const jobs = await this.prisma.jobPost.findMany();
+    const jobs = await this.prisma.jobPost.findMany({where: {isClosed: false}});
     return jobs;
   }
 
   async findOne(idJob: string): Promise<JobPost> {
-    const job = await this.prisma.jobPost.findUnique({ where: { id: idJob } });
+    const job = await this.prisma.jobPost.findUnique({ where: { id: idJob, isClosed: false } });
     if (!job) {
       throw new HttpException('Job não encontrado', HttpStatus.BAD_REQUEST);
     }
@@ -51,11 +51,17 @@ export class JobsService {
     orderBy?: Prisma.JobPostOrderByWithRelationInput;
   }): Promise<JobPost[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.jobPost.findMany({
+
+    const whereWithIsClosedFalse = {
+      ...where,
+      isClosed: false,
+    };
+
+    return await this.prisma.jobPost.findMany({
       skip,
       take,
       cursor,
-      where,
+      where: whereWithIsClosedFalse,
       orderBy,
     });
   }
@@ -74,7 +80,12 @@ export class JobsService {
         "You don't have permission to update this job",
       );
     }
-    return this.prisma.jobPost.delete({ where: job });
+    return this.prisma.jobPost.update({
+      where: job,
+      data: {
+        isClosed: true,
+      },
+    });
   }
 
   async updateJob(
