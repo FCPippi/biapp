@@ -35,19 +35,6 @@ export class UsersController {
     return this.userService.findMany(params);
   }
 
-  @Put()
-  async updateUser(
-    @UserLogged('id') userId: string,
-    @Body() updateUserDto: UpdateAccountDtoSchema,
-  ) {
-    this.userService.updateUser(userId, updateUserDto);
-  }
-
-  @Post()
-  async create(@Body() createUserDto: CreateAccountDtoSchema) {
-    return this.userService.create(createUserDto);
-  }
-
   @Post('/rating')
   async rateUser(
     @UserLogged('id') userFrom: string,
@@ -56,8 +43,21 @@ export class UsersController {
     return this.userService.rateUser(userFrom, rateUserDto);
   }
 
+  @Post()
+  async create(@Body() createUserDto: CreateAccountDtoSchema) {
+    return this.userService.create(createUserDto);
+  }
+
   @Put('/delete')
   async deleteUser(@UserLogged('id') userId: string) {
     return this.userService.deleteUser(userId);
+  }
+
+  @Put()
+  async updateUser(
+    @UserLogged('id') userId: string,
+    @Body() updateUserDto: UpdateAccountDtoSchema,
+  ) {
+    this.userService.updateUser(userId, updateUserDto);
   }
 }

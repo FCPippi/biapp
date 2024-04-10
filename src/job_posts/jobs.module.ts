@@ -19,7 +19,6 @@ export class JobsModule implements NestModule {
       .forRoutes(
         { path: 'jobs/*', method: RequestMethod.POST },
         { path: 'jobs/*', method: RequestMethod.PUT },
-        { path: 'jobs/*', method: RequestMethod.DELETE },
       );
   }
 }

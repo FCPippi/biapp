@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   ParseIntPipe,
   Query,
   Put,
@@ -58,7 +57,7 @@ export class JobsController {
     return this.jobsService.findOne(id);
   }
 
-  @Delete(':id')
+  @Put(':id')
   remove(@UserLogged('id') userId: string, @Param('id') id: string) {
     return this.jobsService.remove(userId, id);
   }
