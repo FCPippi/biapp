@@ -13,8 +13,8 @@ import { Curso, JobPost, Prisma } from '@prisma/client';
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
-  async create(idAluno: string, curso: Curso, body: CreateJobDtoSchema) {
-    const { descricao, valor } = body;
+  async create(idAluno: string, curso: Curso, createJobDto: CreateJobDtoSchema) {
+    const { descricao, valor } = createJobDto;
 
     const job = await this.prisma.jobPost.create({
       data: { idAluno, descricao, valor, curso },
