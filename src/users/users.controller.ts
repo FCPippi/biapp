@@ -5,10 +5,13 @@ import {
   Body,
   Query,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { UserLogged } from './decorators/user.decorator';
+import { RateAccountDtoSchema } from './dto/rate-user.dto';
+import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -32,6 +35,14 @@ export class UsersController {
     return this.userService.findMany(params);
   }
 
+  @Put()
+  async updateUser(
+    @UserLogged('id') userId: string,
+    @Body() updateUserDto: UpdateAccountDtoSchema,
+  ) {
+    this.userService.updateUser(userId, updateUserDto);
+  }
+
   @Post()
   async create(@Body() createUserDto: CreateAccountDtoSchema) {
     return this.userService.create(createUserDto);
@@ -40,9 +51,8 @@ export class UsersController {
   @Post('/rating')
   async rateUser(
     @UserLogged('id') userFrom: string,
-    userTo: string,
-    value: number,
+    @Body() rateUserDto: RateAccountDtoSchema,
   ) {
-    return this.userService.rateUser(userFrom, userTo, Math.floor(value));
+    return this.userService.rateUser(userFrom, rateUserDto);
   }
 }

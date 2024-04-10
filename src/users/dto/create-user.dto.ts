@@ -5,7 +5,7 @@ export const CreateAccountDto = z.object({
   email: z.string().email(),
   password: z.string(),
   birthdate: z.string(),
-  role: z.enum(['USER', 'ADMIN']),
+  role: z.enum(['USER', 'ADMIN']).default('USER'),
   curso: z.enum(['EXATAS', 'HUMANAS', 'BIOLOGICAS']),
   gender: z.enum(['HOMEM', 'MULHER', 'OUTRO']),
 });

@@ -8,13 +8,16 @@ import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Prisma, Rating, User } from '@prisma/client';
+import { UpdateAccountDtoSchema } from './dto/update-user.dto';
+import { RateAccountDtoSchema } from './dto/rate-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(body: CreateAccountDtoSchema) {
-    const { name, email, password, birthdate, curso, gender } = body;
+  async create(createAccountDto: CreateAccountDtoSchema) {
+    const { name, email, password, birthdate, curso, gender } =
+      createAccountDto;
 
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
@@ -67,11 +70,26 @@ export class UsersService {
     return user;
   }
 
+  async updateUser(
+    userId: string,
+    updateUserDto: UpdateAccountDtoSchema,
+  ): Promise<User> {
+    const user = await this.findById(userId);
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: user.id },
+      data: updateUserDto,
+    });
+
+    return updatedUser;
+  }
+
   async rateUser(
     authorId: string,
-    recipientId: string,
-    value: number,
+    rateUserDto: RateAccountDtoSchema,
   ): Promise<Rating> {
+    const { recipientId, value } = rateUserDto;
+
     if (authorId === recipientId) {
       throw new Error('Um usuário não pode se avaliar.');
     }
@@ -94,7 +112,7 @@ export class UsersService {
     });
 
     await this.prisma.user.update({
-      where: { id: recipientId },
+      where: { id: authorId },
       data: {
         ratingsGiven: {
           connect: { id: rating.id },
