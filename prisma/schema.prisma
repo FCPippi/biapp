@@ -46,6 +46,8 @@ model User {
   ratingsReceived Rating[] @relation("ratingsReceived")
 
   jobPosts JobPost[]
+  
+  isDeleted Boolean @default(false)
 }
 model Rating {
   id String @id @default(uuid())
