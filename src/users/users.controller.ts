@@ -55,4 +55,9 @@ export class UsersController {
   ) {
     return this.userService.rateUser(userFrom, rateUserDto);
   }
+
+  @Put('/delete')
+  async deleteUser(@UserLogged('id') userId: string) {
+    return this.userService.deleteUser(userId);
+  }
 }
