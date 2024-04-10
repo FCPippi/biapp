@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -30,50 +24,46 @@ enum Role {
   ADMIN
 }
 
-
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
   birthdate DateTime @db.Date
-  password String
-  role Role @default(USER)
-  curso Curso
-  gender Gender
-  
-  // Adicione estes campos para completar as relações
-  ratingsGiven Rating[] @relation("ratingsGiven")
+  password  String
+  role      Role     @default(USER)
+  curso     Curso
+  gender    Gender
+
+  ratingsGiven    Rating[] @relation("ratingsGiven")
   ratingsReceived Rating[] @relation("ratingsReceived")
 
   jobPosts JobPost[]
-  
+
   isDeleted Boolean @default(false)
 }
+
 model Rating {
-  id String @id @default(uuid())
-  value Int
+  id        String   @id @default(uuid())
+  value     Int
   createdAt DateTime @default(now())
 
-  // Relaciona a avaliação ao usuário que a deu
   authorId String
-  author User @relation("ratingsGiven", fields: [authorId], references: [id])
+  author   User   @relation("ratingsGiven", fields: [authorId], references: [id])
 
-  // Relaciona a avaliação ao usuário que a recebeu
   recipientId String
-  recipient User @relation("ratingsReceived", fields: [recipientId], references: [id])
+  recipient   User   @relation("ratingsReceived", fields: [recipientId], references: [id])
 
   @@index([authorId])
   @@index([recipientId])
 }
 
 model JobPost {
-  id String @id @default(uuid())
-  idAluno String 
-  aluno User @relation(fields: [idAluno],references: [id])
-  curso Curso
+  id        String @id @default(uuid())
+  idAluno   String
+  aluno     User   @relation(fields: [idAluno], references: [id])
+  curso     Curso
   descricao String
-  valor Float
-  
+  valor     Float
+
   isClosed Boolean @default(false)
 }
-
