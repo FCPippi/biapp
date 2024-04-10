@@ -44,10 +44,14 @@ export class AuthController {
       throw new UnauthorizedException('Credenciais inválidas!');
     }
 
-    const accessToken = this.jwtService.sign({
-      sub: user.id,
-    });
-
+    const accessToken = this.jwtService.sign(
+      {
+        sub: user.id,
+      },
+      {
+        expiresIn: '1h', // Token expira após 1 hora
+      },
+    );
     return { access_token: accessToken, user_role: user.role };
   }
 }
