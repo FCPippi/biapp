@@ -23,6 +23,7 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
@@ -31,10 +32,13 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
+    "i": "^0.3.7",
+    "npm": "^10.5.1",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zod-validation-error": "^3.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
