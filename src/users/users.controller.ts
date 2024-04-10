@@ -63,11 +63,6 @@ export class UsersController {
     return this.userService.create(file.buffer.toString(),createUserDto);
   }
 
-  @Put('/delete')
-  async deleteUser(@UserLogged('id') userId: string) {
-    return this.userService.deleteUser(userId);
-  }
-
   @Put()
   async updateUser(
     @UserLogged('id') userId: string,
@@ -87,5 +82,10 @@ export class UsersController {
     file?: Express.Multer.File,
   ) {
     this.userService.updateUser(userId, updateUserDto,file.buffer.toString());
+  }
+
+  @Put('/delete')
+  async deleteUser(@UserLogged('id') userId: string) {
+    return this.userService.deleteUser(userId);
   }
 }
