@@ -5,7 +5,7 @@ import { fromZodError } from 'zod-validation-error';
 export class ZodValidationPipe {
   constructor(private schema: ZodSchema) {}
 
-  transform(value) {
+  transform(value: any) {
     try {
       const parsedValue = this.schema.parse(value);
       return parsedValue;
