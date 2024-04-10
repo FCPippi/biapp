@@ -103,7 +103,7 @@ export class UsersService {
         authorId,
         recipientId,
         value,
-        comment
+        comment,
       },
     });
 

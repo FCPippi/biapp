@@ -66,6 +66,5 @@ model JobPost {
   curso     Curso
   descricao String
   valor     Float
-
   isClosed Boolean @default(false)
 }
