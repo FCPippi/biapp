@@ -47,7 +47,7 @@ export class UsersController {
   }
 
   @Post()
-  async create(@UploadedFile(
+  async create(@Body() createUserDto: CreateAccountDtoSchema@UploadedFile(
     new ParseFilePipeBuilder()
       .addFileTypeValidator({
         fileType: 'jpeg',
@@ -59,8 +59,8 @@ export class UsersController {
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
       }),
   )
-  file: Express.Multer.File,@Body() createUserDto: CreateAccountDtoSchema,) {
-    return this.userService.create(file.buffer.toString(),createUserDto);
+  file?: Express.Multer.File,) {
+    return this.userService.create(createUserDto,file.buffer.toString());
   }
 
   @Put()

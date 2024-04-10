@@ -15,7 +15,7 @@ import { RateAccountDtoSchema } from './dto/rate-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(imageUrl: string, createAccountDto: CreateAccountDtoSchema) {
+  async create( createAccountDto: CreateAccountDtoSchema,imageUrl?: string) {
     const {  name, email, password, birthdate, curso, gender } =
       createAccountDto;
 
