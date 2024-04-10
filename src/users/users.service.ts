@@ -22,6 +22,7 @@ export class UsersService {
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
         email,
+        isDeleted: false,
       },
     });
 
@@ -53,6 +54,9 @@ export class UsersService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
+
+    where.isDeleted = false;
+
     return this.prisma.user.findMany({
       skip,
       take,
@@ -64,7 +68,7 @@ export class UsersService {
 
   async findById(userId: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
+    if (!user || user.isDeleted) {
       throw new HttpException('User não encontrado', HttpStatus.BAD_REQUEST);
     }
     return user;

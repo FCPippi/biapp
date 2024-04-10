@@ -56,16 +56,13 @@ export class JobsService {
   }): Promise<JobPost[]> {
     const { skip, take, cursor, where, orderBy } = params;
 
-    const whereWithIsClosedFalse = {
-      ...where,
-      isClosed: false,
-    };
+    where.isClosed = false;
 
     return await this.prisma.jobPost.findMany({
       skip,
       take,
       cursor,
-      where: whereWithIsClosedFalse,
+      where,
       orderBy,
     });
   }
