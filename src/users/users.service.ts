@@ -15,8 +15,8 @@ import { RateAccountDtoSchema } from './dto/rate-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create( createAccountDto: CreateAccountDtoSchema,imageUrl?: string) {
-    const {  name, email, password, birthdate, curso, gender } =
+  async create(createAccountDto: CreateAccountDtoSchema, imageUrl?: string) {
+    const { name, email, password, birthdate, curso, gender } =
       createAccountDto;
 
     const userWithSameEmail = await this.prisma.user.findUnique({
@@ -42,7 +42,7 @@ export class UsersService {
         birthdate: birthdateToDateTime,
         curso,
         gender,
-        imageUrl
+        imageUrl,
       },
     });
   }
@@ -82,11 +82,11 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.findById(userId);
 
-    const { name, birthdate, curso, gender } = updateUserDto
+    const { name, birthdate, curso, gender } = updateUserDto;
 
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },
-      data: {name,birthdate,curso,gender,imageUrl},
+      data: { name, birthdate, curso, gender, imageUrl },
     });
 
     return updatedUser;

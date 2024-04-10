@@ -47,20 +47,23 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateAccountDtoSchema,@UploadedFile(
-    new ParseFilePipeBuilder()
-      .addFileTypeValidator({
-        fileType: 'jpeg',
-      })
-      .addMaxSizeValidator({
-        maxSize: 1000
-      })
-      .build({
-        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
-      }),
-  )
-  file?: Express.Multer.File,) {
-    return this.userService.create(createUserDto,file.buffer.toString());
+  async create(
+    @Body() createUserDto: CreateAccountDtoSchema,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .addMaxSizeValidator({
+          maxSize: 1000,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file?: Express.Multer.File,
+  ) {
+    return this.userService.create(createUserDto, file.buffer.toString());
   }
 
   @Put()
@@ -73,15 +76,15 @@ export class UsersController {
           fileType: 'jpeg',
         })
         .addMaxSizeValidator({
-          maxSize: 1000
+          maxSize: 1000,
         })
         .build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
     )
     file?: Express.Multer.File,
   ) {
-    this.userService.updateUser(userId, updateUserDto,file.buffer.toString());
+    this.userService.updateUser(userId, updateUserDto, file.buffer.toString());
   }
 
   @Put('/delete')
