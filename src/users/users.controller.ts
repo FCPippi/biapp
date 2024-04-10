@@ -6,6 +6,9 @@ import {
   Query,
   ParseIntPipe,
   Put,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
@@ -44,8 +47,20 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateAccountDtoSchema) {
-    return this.userService.create(createUserDto);
+  async create(@UploadedFile(
+    new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: 'jpeg',
+      })
+      .addMaxSizeValidator({
+        maxSize: 1000
+      })
+      .build({
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+      }),
+  )
+  file: Express.Multer.File,@Body() createUserDto: CreateAccountDtoSchema,) {
+    return this.userService.create(file.buffer.toString(),createUserDto);
   }
 
   @Put('/delete')
@@ -57,7 +72,20 @@ export class UsersController {
   async updateUser(
     @UserLogged('id') userId: string,
     @Body() updateUserDto: UpdateAccountDtoSchema,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .addMaxSizeValidator({
+          maxSize: 1000
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        }),
+    )
+    file?: Express.Multer.File,
   ) {
-    this.userService.updateUser(userId, updateUserDto);
+    this.userService.updateUser(userId, updateUserDto,file.buffer.toString());
   }
 }

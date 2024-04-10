@@ -33,6 +33,7 @@ model User {
   role      Role     @default(USER)
   curso     Curso
   gender    Gender
+  imageUrl     String? 
 
   ratingsGiven    Rating[] @relation("ratingsGiven")
   ratingsReceived Rating[] @relation("ratingsReceived")
