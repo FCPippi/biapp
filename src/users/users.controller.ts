@@ -47,7 +47,7 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateAccountDtoSchema@UploadedFile(
+  async create(@Body() createUserDto: CreateAccountDtoSchema,@UploadedFile(
     new ParseFilePipeBuilder()
       .addFileTypeValidator({
         fileType: 'jpeg',
