@@ -2,22 +2,25 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { NestMiddleware, HttpStatus, Injectable } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { UsersService } from 'src/users/users.service';
 import * as fs from 'fs';
+import { ModuleRef } from '@nestjs/core';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly userService: UsersService) {}
+  private userService: UsersService;
+  constructor(private readonly moduleRef: ModuleRef) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const publicKey = fs.readFileSync(
-      '/workspaces/biapp/keys/public_key.pem',
+      'C:/Users/Usuario/Desktop/biapp/keys/public_key.pem',
       'utf-8',
     );
     const authHeaders = req.headers.authorization;
     if (authHeaders && (authHeaders as string).split(' ')[1]) {
       const token = (authHeaders as string).split(' ')[1];
       const decoded: any = jwt.verify(token, publicKey);
+      this.userService = this.moduleRef.get(UsersService, { strict: false });
       const user = await this.userService.findById(decoded.id);
 
       if (!user) {

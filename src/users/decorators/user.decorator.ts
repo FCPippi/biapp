@@ -15,10 +15,7 @@ export const UserLogged = createParamDecorator(
       ? (req.headers.authorization as string).split(' ')
       : null;
     if (token && token[1]) {
-      const privateKey = fs.readFileSync(
-        '/workspaces/biapp/private_key.pem',
-        'utf-8',
-      );
+      const privateKey = fs.readFileSync('keys/private_key.pem', 'utf-8');
       const decoded: any = jwt.verify(token[1], privateKey);
       return !!data ? decoded[data] : decoded.user;
     }
