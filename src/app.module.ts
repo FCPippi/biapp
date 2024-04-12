@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { JobsModule } from './job_posts/jobPosts.module';
 import { ChatGateway } from './chat/chat.gateway';
-import { JobRequestsModule } from './job_requests/job_requests.module';
+import { JobRequestsModule } from './job_requests/jobRequests.module';
 
 @Module({
   imports: [UsersModule, JobsModule, JobRequestsModule],

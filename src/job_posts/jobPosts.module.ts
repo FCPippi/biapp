@@ -12,7 +12,7 @@ import { AuthMiddleware } from 'src/shared/auth/auth.middleware';
   controllers: [JobPostsController],
   providers: [JobPostsService],
 })
-export class JobsModule implements NestModule {
+export class JobPostsModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)

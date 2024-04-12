@@ -1,5 +1,5 @@
 import { Controller, Get, ParseIntPipe, Post, Query } from '@nestjs/common';
-import { JobRequestsService } from './job_requests.service';
+import { JobRequestsService } from './jobRequests.service';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { CreateJobRequestDtoSchema } from './dto/create-job-request.dto';
 
