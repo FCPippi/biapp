@@ -21,10 +21,7 @@ export class UsersService {
     private emailService: MailService,
   ) {}
 
-  async create(
-    createAccountDto: CreateAccountDtoSchema,
-    imageUrl?: string,
-  ): Promise<User> {
+  async create(createAccountDto: CreateAccountDtoSchema): Promise<User> {
     const { name, email, password, birthdate, graduation, gender } =
       createAccountDto;
     const confirmationToken = uuidv4();
@@ -51,12 +48,14 @@ export class UsersService {
         birthdate: birthdateToDateTime,
         graduation,
         gender,
-        imageUrl,
         confirmationToken,
       },
     });
 
-    await this.emailService.sendConfirmationEmail(user.email, confirmationToken);
+    await this.emailService.sendConfirmationEmail(
+      user.email,
+      confirmationToken,
+    );
 
     return user;
   }
@@ -65,11 +64,11 @@ export class UsersService {
     const user = await this.prisma.user.findFirst({
       where: { confirmationToken: token },
     });
-  
+
     if (!user) {
       throw new NotFoundException('Token inválido');
     }
-  
+
     await this.prisma.user.update({
       where: { id: user.id },
       data: {

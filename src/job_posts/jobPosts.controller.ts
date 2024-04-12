@@ -8,20 +8,20 @@ import {
   Query,
   Put,
 } from '@nestjs/common';
-import { JobsService } from './jobs.service';
-import { CreateJobDtoSchema } from './dto/create-job.dto';
+import { JobsService } from './jobPosts.service';
+import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Graduation } from '@prisma/client';
-import { UpdateJobDtoSchema } from './dto/update-job.dto';
+import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 
 @ApiBearerAuth()
-@Controller('jobs')
+@Controller('job-posts')
 export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  async getJobs(
+  async getJobPosts(
     @Query('skip', ParseIntPipe) skip?: number,
     @Query('take', ParseIntPipe) take?: number,
     @Query('cursor') cursor?: string,
@@ -35,16 +35,16 @@ export class JobsController {
       where: where ? JSON.parse(where) : undefined,
       orderBy: orderBy ? JSON.parse(orderBy) : undefined,
     };
-    return this.jobsService.findMany(params);
+    return await this.jobsService.findMany(params);
   }
 
   @Post()
-  create(
+  async create(
     @UserLogged('id') userId: string,
     @UserLogged('curso') userCurso: Graduation,
-    @Body() createJobDto: CreateJobDtoSchema,
+    @Body() createJobPostDto: CreateJobPostDtoSchema,
   ) {
-    return this.jobsService.create(userId, userCurso, createJobDto);
+    return await this.jobsService.create(userId, userCurso, createJobPostDto);
   }
 
   @Get()
@@ -58,16 +58,16 @@ export class JobsController {
   }
 
   @Put(':id')
-  remove(@UserLogged('id') userId: string, @Param('id') id: string) {
-    return this.jobsService.remove(userId, id);
+  async remove(@UserLogged('id') userId: string, @Param('id') id: string) {
+    return await this.jobsService.remove(userId, id);
   }
 
   @Put(':id')
-  updateJob(
+  async updateJob(
     @UserLogged('id') userId: string,
     @Param('id') jobId: string,
-    @Body() updateJobDto: UpdateJobDtoSchema,
+    @Body() updateJobPostDto: UpdateJobPostDtoSchema,
   ) {
-    return this.jobsService.updateJob(userId, jobId, updateJobDto);
+    return await this.jobsService.updateJob(userId, jobId, updateJobPostDto);
   }
 }

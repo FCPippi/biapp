@@ -5,8 +5,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateJobDtoSchema } from './dto/create-job.dto';
-import { UpdateJobDtoSchema } from './dto/update-job.dto';
+import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
+import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Graduation, JobPost, Prisma } from '@prisma/client';
 
@@ -16,7 +16,7 @@ export class JobsService {
   async create(
     studentId: string,
     graduation: Graduation,
-    createJobDto: CreateJobDtoSchema,
+    createJobDto: CreateJobPostDtoSchema,
   ): Promise<JobPost> {
     const { title, description, value } = createJobDto;
 
@@ -89,7 +89,7 @@ export class JobsService {
   async updateJob(
     userId: string,
     jobId: string,
-    updateJobDto: UpdateJobDtoSchema,
+    updateJobDto: UpdateJobPostDtoSchema,
   ) {
     const job = await this.prisma.jobPost.findUnique({
       where: { id: jobId },

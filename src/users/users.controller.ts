@@ -35,7 +35,7 @@ export class UsersController {
       where: where ? JSON.parse(where) : undefined,
       orderBy: orderBy ? JSON.parse(orderBy) : undefined,
     };
-    return this.userService.findMany(params);
+    return await this.userService.findMany(params);
   }
 
   @Post('/rating')
@@ -43,27 +43,12 @@ export class UsersController {
     @UserLogged('id') userFrom: string,
     @Body() rateUserDto: RateAccountDtoSchema,
   ) {
-    return this.userService.rateUser(userFrom, rateUserDto);
+    return await this.userService.rateUser(userFrom, rateUserDto);
   }
 
   @Post()
-  async create(
-    @Body() createUserDto: CreateAccountDtoSchema,
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType: 'jpeg',
-        })
-        .addMaxSizeValidator({
-          maxSize: 1000,
-        })
-        .build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        }),
-    )
-    file?: Express.Multer.File,
-  ) {
-    return this.userService.create(createUserDto, file.buffer.toString());
+  async create(@Body() createUserDto: CreateAccountDtoSchema) {
+    return await this.userService.create(createUserDto);
   }
 
   @Put()
@@ -84,11 +69,15 @@ export class UsersController {
     )
     file?: Express.Multer.File,
   ) {
-    this.userService.updateUser(userId, updateUserDto, file.buffer.toString());
+    return await this.userService.updateUser(
+      userId,
+      updateUserDto,
+      file.buffer.toString(),
+    );
   }
 
   @Put('/delete')
   async deleteUser(@UserLogged('id') userId: string) {
-    return this.userService.deleteUser(userId);
+    return await this.userService.deleteUser(userId);
   }
 }

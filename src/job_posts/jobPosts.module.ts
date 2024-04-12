@@ -4,8 +4,8 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { JobsService } from './jobs.service';
-import { JobsController } from './jobs.controller';
+import { JobsService } from './jobPosts.service';
+import { JobsController } from './jobPosts.controller';
 import { AuthMiddleware } from 'src/shared/auth/auth.middleware';
 
 @Module({
@@ -17,8 +17,8 @@ export class JobsModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
-        { path: 'jobs/*', method: RequestMethod.POST },
-        { path: 'jobs/*', method: RequestMethod.PUT },
+        { path: 'job-posts/*', method: RequestMethod.POST },
+        { path: 'job-posts/*', method: RequestMethod.PUT },
       );
   }
 }
