@@ -41,6 +41,11 @@ model User {
   jobPosts JobPost[]
 
   isDeleted Boolean @default(false)
+
+  conversations     Conversation[]  @relation("UserConversations")
+  messagesSent      Message[] @relation("MessageAuthor")
+
+  userConversations UserConversations[]
 }
 
 model Rating {
@@ -68,4 +73,30 @@ model JobPost {
   descricao String
   valor     Float
   isClosed Boolean @default(false)
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  participants User[] @relation("UserConversations")
+  messages   Message[]
+  userConversations UserConversations[]
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  content     String
+  createdAt   DateTime @default(now())
+  authorId    String
+  author      User     @relation("MessageAuthor",fields: [authorId], references: [id])
+  conversationId String
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model UserConversations {
+  userId        String
+  user          User @relation(fields: [userId], references: [id])
+  conversationId String
+  conversation  Conversation @relation(fields: [conversationId], references: [id])
+ 
+  @@id([userId, conversationId])
 }

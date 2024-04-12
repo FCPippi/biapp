@@ -22,17 +22,16 @@ export class UsersService {
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
         email,
-        isDeleted: false,
       },
     });
 
-    if (userWithSameEmail) {
+    if (userWithSameEmail && !userWithSameEmail.isDeleted) {
       throw new ConflictException('Usuário já cadastrado!');
     }
 
     const encryptedPassword = await hash(password, 8);
 
-    const birthdateToDateTime = new Date(birthdate).toISOString();
+    const birthdateToDateTime = new Date(birthdate);
 
     await this.prisma.user.create({
       data: {
@@ -56,21 +55,26 @@ export class UsersService {
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
 
-    where.isDeleted = false;
+    const whereClause: Prisma.UserWhereInput = {
+      ...where,
+      isDeleted: false,
+    };
 
     return this.prisma.user.findMany({
       skip,
       take,
       cursor,
-      where,
+      where: whereClause,
       orderBy,
     });
   }
 
   async findById(userId: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user || user.isDeleted) {
-      throw new HttpException('User não encontrado', HttpStatus.BAD_REQUEST);
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, isDeleted: false },
+    });
+    if (!user) {
+      throw new HttpException('User não encontrado', HttpStatus.NOT_FOUND);
     }
     return user;
   }
@@ -99,7 +103,10 @@ export class UsersService {
     const { recipientId, value, comment } = rateUserDto;
 
     if (authorId === recipientId) {
-      throw new Error('Um usuário não pode se avaliar.');
+      throw new HttpException(
+        'Um usuário não pode se avaliar.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const rating = await this.prisma.rating.create({
@@ -108,24 +115,6 @@ export class UsersService {
         recipientId,
         value,
         comment,
-      },
-    });
-
-    await this.prisma.user.update({
-      where: { id: recipientId },
-      data: {
-        ratingsReceived: {
-          connect: { id: rating.id },
-        },
-      },
-    });
-
-    await this.prisma.user.update({
-      where: { id: authorId },
-      data: {
-        ratingsGiven: {
-          connect: { id: rating.id },
-        },
       },
     });
 
