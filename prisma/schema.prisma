@@ -43,7 +43,6 @@ model User {
 
   isDeleted Boolean @default(false)
   emailVerified Boolean @default(false)
-  confirmationToken String?
 
   conversations     Conversation[]  @relation("ConversationParticipants")
   messagesSent      Message[] @relation("MessageAuthor")

@@ -12,13 +12,11 @@ import { Prisma, Rating, User } from '@prisma/client';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
-    private emailService: MailService,
   ) {}
 
   async create(createAccountDto: CreateAccountDtoSchema): Promise<User> {
@@ -48,19 +46,13 @@ export class UsersService {
         birthdate: birthdateToDateTime,
         graduation,
         gender,
-        confirmationToken,
       },
     });
-
-    await this.emailService.sendConfirmationEmail(
-      user.email,
-      confirmationToken,
-    );
 
     return user;
   }
 
-  async confirmEmail(token: string) {
+  /* async confirmEmail(token: string) {
     const user = await this.prisma.user.findFirst({
       where: { confirmationToken: token },
     });
@@ -76,7 +68,7 @@ export class UsersService {
         confirmationToken: null,
       },
     });
-  }
+  } */
 
   async findMany(params: {
     skip?: number;
