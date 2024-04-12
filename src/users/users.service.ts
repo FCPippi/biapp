@@ -15,9 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createAccountDto: CreateAccountDtoSchema): Promise<User> {
     const { name, email, password, birthdate, graduation, gender } =
