@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { z } from 'zod';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import * as fs from 'fs';
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -18,14 +19,14 @@ const authenticateBodySchema = z.object({
 
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>;
 
-@Controller('/login')
+@Controller('/auth')
 export class AuthController {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
 
-  @Post()
+  @Post('/login')
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body;
@@ -52,6 +53,37 @@ export class AuthController {
         expiresIn: '1h', // Token expira após 1 hora
       },
     );
-    return { access_token: accessToken, user_role: user.role };
+    return { access_token: accessToken };
+  }
+
+  @Post('refresh-token')
+  async refreshToken(@Body() body: { refreshToken: string }) {
+    const { refreshToken } = body;
+
+    try {
+      const decoded = this.jwtService.verify(refreshToken, {
+        secret: fs.readFileSync('/workspaces/biapp/private_key.pem', 'utf-8'),
+      });
+
+      const user = await this.prisma.user.findUnique({
+        where: { id: decoded.sub },
+      });
+
+      if (!user || user.isDeleted) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      const accessToken = this.jwtService.sign(
+        { sub: user.id },
+        {
+          expiresIn: '1h',
+          secret: fs.readFileSync('/workspaces/biapp/private_key.pem', 'utf-8'),
+        },
+      );
+
+      return { access_token: accessToken };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 }
