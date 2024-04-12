@@ -41,6 +41,8 @@ model User {
   jobPosts JobPost[]
 
   isDeleted Boolean @default(false)
+  emailVerified Boolean @default(false)
+  confirmationToken String?
 
   conversations     Conversation[]  @relation("UserConversations")
   messagesSent      Message[] @relation("MessageAuthor")

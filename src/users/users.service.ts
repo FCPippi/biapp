@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
@@ -10,14 +11,23 @@ import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Prisma, Rating, User } from '@prisma/client';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: MailService,
+  ) {}
 
-  async create(createAccountDto: CreateAccountDtoSchema, imageUrl?: string): Promise<User> {
+  async create(
+    createAccountDto: CreateAccountDtoSchema,
+    imageUrl?: string,
+  ): Promise<User> {
     const { name, email, password, birthdate, graduation, gender } =
       createAccountDto;
+    const confirmationToken = uuidv4();
 
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
@@ -33,7 +43,7 @@ export class UsersService {
 
     const birthdateToDateTime = new Date(birthdate);
 
-    return await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         name,
         email,
@@ -42,6 +52,29 @@ export class UsersService {
         graduation,
         gender,
         imageUrl,
+        confirmationToken,
+      },
+    });
+
+    await this.emailService.sendConfirmationEmail(user.email, confirmationToken);
+
+    return user;
+  }
+
+  async confirmEmail(token: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { confirmationToken: token },
+    });
+  
+    if (!user) {
+      throw new NotFoundException('Token inválido');
+    }
+  
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: true,
+        confirmationToken: null,
       },
     });
   }
@@ -130,6 +163,5 @@ export class UsersService {
         isDeleted: true,
       },
     });
-    
   }
 }
