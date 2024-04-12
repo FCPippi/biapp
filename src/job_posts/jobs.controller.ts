@@ -12,7 +12,7 @@ import { JobsService } from './jobs.service';
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Curso } from '@prisma/client';
+import { Graduation } from '@prisma/client';
 import { UpdateJobDtoSchema } from './dto/update-job.dto';
 
 @ApiBearerAuth()
@@ -41,7 +41,7 @@ export class JobsController {
   @Post()
   create(
     @UserLogged('id') userId: string,
-    @UserLogged('curso') userCurso: Curso,
+    @UserLogged('curso') userCurso: Graduation,
     @Body() createJobDto: CreateJobDtoSchema,
   ) {
     return this.jobsService.create(userId, userCurso, createJobDto);

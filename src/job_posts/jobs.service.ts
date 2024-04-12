@@ -8,33 +8,26 @@ import {
 import { CreateJobDtoSchema } from './dto/create-job.dto';
 import { UpdateJobDtoSchema } from './dto/update-job.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { Curso, JobPost, Prisma } from '@prisma/client';
+import { Graduation, JobPost, Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobsService {
   constructor(private prisma: PrismaService) {}
   async create(
-    idAluno: string,
-    curso: Curso,
+    studentId: string,
+    graduation: Graduation,
     createJobDto: CreateJobDtoSchema,
-  ) {
-    const { descricao, valor } = createJobDto;
+  ) : Promise<JobPost> {
+    const { title, description, value } = createJobDto;
 
     const job = await this.prisma.jobPost.create({
-      data: { idAluno, descricao, valor, curso },
+      data: { studentId, title, description, value, graduation },
     });
-
-    await this.prisma.user.update({
-      where: { id: idAluno },
-      data: {
-        jobPosts: {
-          connect: { id: job.id },
-        },
-      },
-    });
+    
+    return job;
   }
 
-  async findAll() {
+  async findAll(): Promise<JobPost[]> {
     const jobs = await this.prisma.jobPost.findMany({
       where: { isClosed: false },
     });
@@ -80,7 +73,7 @@ export class JobsService {
       throw new NotFoundException(`Job with ID "${idJob}" not found`);
     }
 
-    if (job.idAluno !== userId) {
+    if (job.studentId !== userId) {
       throw new UnauthorizedException(
         "You don't have permission to update this job",
       );
@@ -106,7 +99,7 @@ export class JobsService {
       throw new NotFoundException(`Job with ID "${jobId}" not found`);
     }
 
-    if (job.idAluno !== userId) {
+    if (job.studentId !== userId) {
       throw new UnauthorizedException(
         "You don't have permission to update this job",
       );
