@@ -78,7 +78,7 @@ export class JobsService {
         "You don't have permission to update this job",
       );
     }
-    return this.prisma.jobPost.update({
+    return await this.prisma.jobPost.update({
       where: job,
       data: {
         isClosed: true,
@@ -105,7 +105,7 @@ export class JobsService {
       );
     }
 
-    return this.prisma.jobPost.update({
+    return await this.prisma.jobPost.update({
       where: { id: jobId },
       data: updateJobDto,
     });

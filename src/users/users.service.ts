@@ -15,7 +15,7 @@ import { RateAccountDtoSchema } from './dto/rate-user.dto';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createAccountDto: CreateAccountDtoSchema, imageUrl?: string) {
+  async create(createAccountDto: CreateAccountDtoSchema, imageUrl?: string): Promise<User> {
     const { name, email, password, birthdate, graduation, gender } =
       createAccountDto;
 
@@ -33,7 +33,7 @@ export class UsersService {
 
     const birthdateToDateTime = new Date(birthdate);
 
-    await this.prisma.user.create({
+    return await this.prisma.user.create({
       data: {
         name,
         email,
@@ -60,7 +60,7 @@ export class UsersService {
       isDeleted: false,
     };
 
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       skip,
       take,
       cursor,
@@ -124,12 +124,12 @@ export class UsersService {
   async deleteUser(userId: string) {
     const user = await this.findById(userId);
 
-    await this.prisma.user.update({
+    return await this.prisma.user.update({
       where: { id: user.id },
       data: {
         isDeleted: true,
       },
     });
-    return user;
+    
   }
 }
