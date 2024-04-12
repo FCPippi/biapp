@@ -11,7 +11,7 @@ import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Graduation, JobPost, Prisma } from '@prisma/client';
 
 @Injectable()
-export class JobsService {
+export class JobPostsService {
   constructor(private prisma: PrismaService) {}
   async create(
     studentId: string,

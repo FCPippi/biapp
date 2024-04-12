@@ -8,7 +8,7 @@ import {
   Query,
   Put,
 } from '@nestjs/common';
-import { JobsService } from './jobPosts.service';
+import { JobPostsService } from './jobPosts.service';
 import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -17,8 +17,8 @@ import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 
 @ApiBearerAuth()
 @Controller('job-posts')
-export class JobsController {
-  constructor(private readonly jobsService: JobsService) {}
+export class JobPostsController {
+  constructor(private readonly jobsService: JobPostsService) {}
 
   @Get()
   async getJobPosts(

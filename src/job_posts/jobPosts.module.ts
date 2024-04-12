@@ -4,13 +4,13 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { JobsService } from './jobPosts.service';
-import { JobsController } from './jobPosts.controller';
+import { JobPostsService } from './jobPosts.service';
+import { JobPostsController } from './jobPosts.controller';
 import { AuthMiddleware } from 'src/shared/auth/auth.middleware';
 
 @Module({
-  controllers: [JobsController],
-  providers: [JobsService],
+  controllers: [JobPostsController],
+  providers: [JobPostsService],
 })
 export class JobsModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
