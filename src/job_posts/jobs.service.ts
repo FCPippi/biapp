@@ -17,13 +17,13 @@ export class JobsService {
     studentId: string,
     graduation: Graduation,
     createJobDto: CreateJobDtoSchema,
-  ) : Promise<JobPost> {
+  ): Promise<JobPost> {
     const { title, description, value } = createJobDto;
 
     const job = await this.prisma.jobPost.create({
       data: { studentId, title, description, value, graduation },
     });
-    
+
     return job;
   }
 
