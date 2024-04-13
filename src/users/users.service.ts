@@ -22,7 +22,7 @@ export class UsersService {
       createAccountDto;
     const confirmationToken = uuidv4();
 
-    const userWithSameEmail = await this.prisma.user.findUnique({
+    const userWithSameEmail = await this.prisma.user.findFirst({
       where: {
         email,
       },
@@ -149,6 +149,7 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id: user.id },
       data: {
+        email: user.email + '-deleted',
         isDeleted: true,
       },
     });

@@ -38,6 +38,10 @@ export class UsersController {
     return await this.userService.findMany(params);
   }
 
+  @Get('/logged')
+  async getLoggedUser(@UserLogged('id') studentId: string) {
+    return await this.userService.findById(studentId);
+  }
   @Post('/rating')
   async rateUser(
     @UserLogged('id') userFrom: string,

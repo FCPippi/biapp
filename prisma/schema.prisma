@@ -25,27 +25,27 @@ enum Role {
 }
 
 model User {
-  id         String   @id @default(uuid()) 
+  id         String     @id @default(uuid())
   name       String
-  email      String   @unique
-  birthdate  DateTime @db.Date
+  email      String
+  birthdate  DateTime   @db.Date
   password   String
-  role       Role     @default(USER)
+  role       Role       @default(USER)
   graduation Graduation
   gender     Gender
-  imageUrl   String? 
+  imageUrl   String?
 
   ratingsGiven    Rating[] @relation("ratingsGiven")
   ratingsReceived Rating[] @relation("ratingsReceived")
 
-  jobPosts JobPost[] @relation("jobPosts")
+  jobPosts    JobPost[]    @relation("jobPosts")
   jobRequests JobRequest[] @relation("jobRequests")
 
-  isDeleted Boolean @default(false)
+  isDeleted     Boolean @default(false)
   emailVerified Boolean @default(false)
 
-  conversations     Conversation[]  @relation("ConversationParticipants")
-  messagesSent      Message[] @relation("MessageAuthor")
+  conversations Conversation[] @relation("ConversationParticipants")
+  messagesSent  Message[]      @relation("MessageAuthor")
 }
 
 model Rating {
@@ -66,41 +66,39 @@ model Rating {
 }
 
 model JobPost {
-  id         String @id @default(uuid())
-  studentId  String
-  student    User   @relation("jobPosts",fields: [studentId], references: [id])
-  graduation Graduation
-  title     String
-  description  String
-  value      Float
-  imageUrl String?
-  isClosed   Boolean @default(false)
+  id          String     @id @default(uuid())
+  studentId   String
+  student     User       @relation("jobPosts", fields: [studentId], references: [id])
+  graduation  Graduation
+  title       String
+  description String
+  value       Float
+  imageUrl    String?
+  isClosed    Boolean    @default(false)
 }
 
 model JobRequest {
-  id String @id @default(uuid())
-  title   String
+  id          String     @id @default(uuid())
+  title       String
   description String
-  graduation Graduation
-  studentId  String
-  student User @relation("jobRequests", fields: [studentId], references: [id])
-  isClosed   Boolean @default(false)
+  graduation  Graduation
+  studentId   String
+  student     User       @relation("jobRequests", fields: [studentId], references: [id])
+  isClosed    Boolean    @default(false)
 }
 
 model Conversation {
-  id        String   @id @default(uuid())
-  participants User[] @relation("ConversationParticipants")
-  messages   Message[]
+  id           String    @id @default(uuid())
+  participants User[]    @relation("ConversationParticipants")
+  messages     Message[]
 }
 
 model Message {
-  id          String   @id @default(uuid())
-  content     String
-  createdAt   DateTime @default(now())
-  authorId    String
-  author      User     @relation("MessageAuthor",fields: [authorId], references: [id])
+  id             String       @id @default(uuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  authorId       String
+  author         User         @relation("MessageAuthor", fields: [authorId], references: [id])
   conversationId String
-  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
 }
-
-

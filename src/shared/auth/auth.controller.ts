@@ -29,16 +29,10 @@ export class AuthController {
   @Post('/login')
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
   async handle(@Body() body: AuthenticateBodySchema) {
-    console.log(
-      fs.readFileSync(
-        'C:/Users/Usuario/Desktop/biapp/keys/public_key.pem',
-        'utf-8',
-      ),
-    );
     const { email, password } = body;
 
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    const user = await this.prisma.user.findFirst({
+      where: { email, isDeleted: false },
     });
 
     if (!user || user.isDeleted) {
@@ -53,12 +47,17 @@ export class AuthController {
 
     const accessToken = this.jwtService.sign(
       {
-        sub: user,
+        sub: user.id,
       },
+
       {
-        expiresIn: '1h', // Token expira após 1 hora
+        secret: fs.readFileSync(
+          'C:/Users/Usuario/Desktop/biapp/keys/private_key.pem',
+          'utf-8',
+        ),
       },
     );
+
     return { access_token: accessToken };
   }
 
@@ -87,7 +86,7 @@ export class AuthController {
         {
           expiresIn: '1h',
           secret: fs.readFileSync(
-            'C:/Users/Usuario/Desktop/biapp/keys/private_key.pem',
+            'C:/Users/Usuario/Desktop/biapp/keys/p_key.pem',
             'utf-8',
           ),
         },
