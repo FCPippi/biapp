@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
   //NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcryptjs';
@@ -91,13 +92,22 @@ export class UsersService {
     });
   }
 
-  async findById(userId: string): Promise<User> {
-    const user = await this.prisma.user.findFirst({
-      where: { id: userId, isDeleted: false },
+  async loadUserInfo(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        ratingsGiven: true,
+        ratingsReceived: true,
+        jobPosts: true,
+        jobRequests: true,
+       
+      }
     });
+  
     if (!user) {
-      throw new HttpException('User não encontrado', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('Usuário não encontrado');
     }
+  
     return user;
   }
 
@@ -106,8 +116,9 @@ export class UsersService {
     updateUserDto: UpdateAccountDtoSchema,
     imageUrl?: string,
   ): Promise<User> {
-    const user = await this.findById(userId);
+    const user = await this.loadUserInfo(userId);
 
+    
     const { name, birthdate, graduation, gender } = updateUserDto;
 
     const updatedUser = await this.prisma.user.update({
@@ -130,6 +141,8 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    
+    
 
     const rating = await this.prisma.rating.create({
       data: {
@@ -143,8 +156,24 @@ export class UsersService {
     return rating;
   }
 
+  async getUserRatingAverage(userId: string): Promise<number> {
+    const ratings = await this.prisma.rating.findMany({
+      where: { recipientId: userId },
+    });
+  
+    if (ratings.length === 0) {
+      return 0;
+    }
+  
+    const sum = ratings.reduce((acc, rating) => acc + rating.value, 0);
+    const average = sum / ratings.length;
+  
+    return average;
+  }
+
+
   async deleteUser(userId: string) {
-    const user = await this.findById(userId);
+    const user = await this.loadUserInfo(userId);
 
     return await this.prisma.user.update({
       where: { id: user.id },

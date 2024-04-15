@@ -40,7 +40,7 @@ export class UsersController {
 
   @Get('/logged')
   async getLoggedUser(@UserLogged('id') studentId: string) {
-    return await this.userService.findById(studentId);
+    return await this.userService.loadUserInfo(studentId);
   }
   @Post('/rating')
   async rateUser(
