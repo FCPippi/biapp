@@ -38,4 +38,8 @@ export class JobRequestsService {
       orderBy,
     });
   }
+
+  async findAll() {
+    return await this.prisma.jobRequest.findMany();
+  }
 }

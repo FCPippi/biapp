@@ -8,7 +8,7 @@ export class JobRequestsController {
   constructor(private readonly jobRequestsService: JobRequestsService) {}
 
   @Get()
-  async getJobPosts(
+  async getJobRequests(
     @Query('skip', ParseIntPipe) skip?: number,
     @Query('take', ParseIntPipe) take?: number,
     @Query('cursor') cursor?: string,
@@ -24,6 +24,12 @@ export class JobRequestsController {
     };
     return await this.jobRequestsService.findMany(params);
   }
+
+  @Get('/all')
+  async getAllJobs() {
+    return await this.jobRequestsService.findAll();
+  }
+
   @Post()
   async create(
     @UserLogged('id') studentId: string,
