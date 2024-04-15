@@ -6,6 +6,7 @@ import { JobPostsModule } from './job_posts/jobPosts.module';
 import { JobRequestsModule } from './job_requests/jobRequests.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './shared/auth/auth.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './shared/auth/auth.module';
     JobRequestsModule,
     ChatModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
