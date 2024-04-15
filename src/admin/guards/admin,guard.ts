@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 
@@ -12,7 +17,9 @@ export class AdminGuard implements CanActivate {
       : null;
 
     if (!token || token.length !== 2) {
-      throw new UnauthorizedException('Token de autenticação ausente ou inválido');
+      throw new UnauthorizedException(
+        'Token de autenticação ausente ou inválido',
+      );
     }
 
     try {

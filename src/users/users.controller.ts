@@ -6,7 +6,6 @@ import {
   Query,
   Patch,
   ParseIntPipe,
-  Put,
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,

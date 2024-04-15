@@ -100,16 +100,15 @@ export class UsersService {
         jobPosts: true,
         jobRequests: true,
       },
-      
     });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    const avgRating = await this.getUserRatingAverage(studentId)
+    const avgRating = await this.getUserRatingAverage(studentId);
 
-    return {...user, avgRating }
+    return { ...user, avgRating };
   }
 
   async updateUser(
