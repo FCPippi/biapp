@@ -17,7 +17,11 @@ export class JobPostsController {
     @UserLogged('graduation') userCurso: Graduation,
     @Body() createJobPostDto: CreateJobPostDtoSchema,
   ) {
-    return await this.jobPostsService.create(userId, userCurso, createJobPostDto);
+    return await this.jobPostsService.create(
+      userId,
+      userCurso,
+      createJobPostDto,
+    );
   }
 
   @Get()
@@ -41,6 +45,10 @@ export class JobPostsController {
     @Param('id') jobId: string,
     @Body() updateJobPostDto: UpdateJobPostDtoSchema,
   ) {
-    return await this.jobPostsService.updateJob(userId, jobId, updateJobPostDto);
+    return await this.jobPostsService.updateJob(
+      userId,
+      jobId,
+      updateJobPostDto,
+    );
   }
 }

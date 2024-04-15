@@ -1,4 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { JobRequestsService } from './jobRequests.service';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { CreateJobRequestDtoSchema } from './dto/create-job-request.dto';

@@ -100,14 +100,13 @@ export class UsersService {
         ratingsReceived: true,
         jobPosts: true,
         jobRequests: true,
-       
-      }
+      },
     });
-  
+
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
-  
+
     return user;
   }
 
@@ -118,7 +117,6 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.loadUserInfo(userId);
 
-    
     const { name, birthdate, graduation, gender } = updateUserDto;
 
     const updatedUser = await this.prisma.user.update({
@@ -141,8 +139,6 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
-    
 
     const rating = await this.prisma.rating.create({
       data: {
@@ -160,17 +156,16 @@ export class UsersService {
     const ratings = await this.prisma.rating.findMany({
       where: { recipientId: userId },
     });
-  
+
     if (ratings.length === 0) {
       return 0;
     }
-  
+
     const sum = ratings.reduce((acc, rating) => acc + rating.value, 0);
     const average = sum / ratings.length;
-  
+
     return average;
   }
-
 
   async deleteUser(userId: string) {
     const user = await this.loadUserInfo(userId);

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { CreateJobRequestDtoSchema } from './dto/create-job-request.dto';
 import { JobRequest, Prisma } from '@prisma/client';
@@ -39,12 +43,11 @@ export class JobRequestsService {
     });
   }
 
-  async findAll() : Promise<JobRequest[]> {
+  async findAll(): Promise<JobRequest[]> {
     return await this.prisma.jobRequest.findMany();
   }
 
-  async remove(studentId:string,idJob:string):Promise<JobRequest> {
-
+  async remove(studentId: string, idJob: string): Promise<JobRequest> {
     const job = await this.prisma.jobRequest.findUnique({
       where: { id: idJob },
     });
