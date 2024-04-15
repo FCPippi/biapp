@@ -1,4 +1,4 @@
-import { Controller, Get, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { JobRequestsService } from './jobRequests.service';
 import { UserLogged } from 'src/users/decorators/user.decorator';
 import { CreateJobRequestDtoSchema } from './dto/create-job-request.dto';
@@ -26,7 +26,7 @@ export class JobRequestsController {
   }
 
   @Get('/all')
-  async getAllJobs() {
+  async getAllJobRequests() {
     return await this.jobRequestsService.findAll();
   }
 
@@ -36,5 +36,10 @@ export class JobRequestsController {
     createJobRequestDto: CreateJobRequestDtoSchema,
   ) {
     return await this.jobRequestsService.create(studentId, createJobRequestDto);
+  }
+
+  @Put(':id')
+  async remove(@UserLogged('id') userId: string, @Param('id') id: string) {
+    return await this.jobRequestsService.remove(userId, id);
   }
 }

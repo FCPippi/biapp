@@ -9,7 +9,7 @@ import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 @ApiBearerAuth()
 @Controller('job-posts')
 export class JobPostsController {
-  constructor(private readonly jobsService: JobPostsService) {}
+  constructor(private readonly jobPostsService: JobPostsService) {}
 
   @Post()
   async create(
@@ -17,22 +17,22 @@ export class JobPostsController {
     @UserLogged('graduation') userCurso: Graduation,
     @Body() createJobPostDto: CreateJobPostDtoSchema,
   ) {
-    return await this.jobsService.create(userId, userCurso, createJobPostDto);
+    return await this.jobPostsService.create(userId, userCurso, createJobPostDto);
   }
 
   @Get()
   findAll() {
-    return this.jobsService.findAll();
+    return this.jobPostsService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.jobsService.findOne(id);
+    return this.jobPostsService.findOne(id);
   }
 
   @Put(':id')
   async remove(@UserLogged('id') userId: string, @Param('id') id: string) {
-    return await this.jobsService.remove(userId, id);
+    return await this.jobPostsService.remove(userId, id);
   }
 
   @Put(':id')
@@ -41,6 +41,6 @@ export class JobPostsController {
     @Param('id') jobId: string,
     @Body() updateJobPostDto: UpdateJobPostDtoSchema,
   ) {
-    return await this.jobsService.updateJob(userId, jobId, updateJobPostDto);
+    return await this.jobPostsService.updateJob(userId, jobId, updateJobPostDto);
   }
 }
