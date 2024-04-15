@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseIntPipe,
-  Query,
-  Put,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { JobPostsService } from './jobPosts.service';
 import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
@@ -20,28 +11,10 @@ import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 export class JobPostsController {
   constructor(private readonly jobsService: JobPostsService) {}
 
-  @Get()
-  async getJobPosts(
-    @Query('skip', ParseIntPipe) skip?: number,
-    @Query('take', ParseIntPipe) take?: number,
-    @Query('cursor') cursor?: string,
-    @Query('where') where?: string,
-    @Query('orderBy') orderBy?: string,
-  ) {
-    const params = {
-      skip,
-      take,
-      cursor: cursor ? JSON.parse(cursor) : undefined,
-      where: where ? JSON.parse(where) : undefined,
-      orderBy: orderBy ? JSON.parse(orderBy) : undefined,
-    };
-    return await this.jobsService.findMany(params);
-  }
-
   @Post()
   async create(
     @UserLogged('id') userId: string,
-    @UserLogged('curso') userCurso: Graduation,
+    @UserLogged('graduation') userCurso: Graduation,
     @Body() createJobPostDto: CreateJobPostDtoSchema,
   ) {
     return await this.jobsService.create(userId, userCurso, createJobPostDto);

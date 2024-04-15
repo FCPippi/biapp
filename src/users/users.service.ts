@@ -3,7 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
+  //NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
@@ -11,7 +11,7 @@ import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Prisma, Rating, User } from '@prisma/client';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
   async create(createAccountDto: CreateAccountDtoSchema): Promise<User> {
     const { name, email, password, birthdate, graduation, gender } =
       createAccountDto;
-    const confirmationToken = uuidv4();
+    //const confirmationToken = uuidv4();
 
     const userWithSameEmail = await this.prisma.user.findFirst({
       where: {

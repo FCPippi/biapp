@@ -29,8 +29,8 @@ export class UsersController {
     @Query('orderBy') orderBy?: string,
   ) {
     const params = {
-      skip,
-      take,
+      skip: skip ? JSON.parse(cursor) : 0,
+      take: take ? JSON.parse(cursor) : 0,
       cursor: cursor ? JSON.parse(cursor) : undefined,
       where: where ? JSON.parse(where) : undefined,
       orderBy: orderBy ? JSON.parse(orderBy) : undefined,

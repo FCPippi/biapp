@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { PrismaService } from '../prisma/prisma.service';
 import {
   Body,
@@ -47,14 +48,11 @@ export class AuthController {
 
     const accessToken = this.jwtService.sign(
       {
-        sub: user.id,
+        sub: user,
       },
 
       {
-        secret: fs.readFileSync(
-          'C:/Users/Usuario/Desktop/biapp/keys/private_key.pem',
-          'utf-8',
-        ),
+        secret: fs.readFileSync('./keys/private_key.pem', 'utf-8'),
       },
     );
 

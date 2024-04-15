@@ -12,14 +12,11 @@ export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly moduleRef: ModuleRef) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const publicKey = fs.readFileSync(
-      'C:/Users/Usuario/Desktop/biapp/keys/public_key.pem',
-      'utf-8',
-    );
+    const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf-8');
     const authHeaders = req.headers.authorization;
     if (authHeaders && (authHeaders as string).split(' ')[1]) {
       const token = (authHeaders as string).split(' ')[1];
-      const decoded: any = jwt.verify(token, publicKey);
+      const decoded: any = jwt.verify(token, privateKey);
       this.userService = this.moduleRef.get(UsersService, { strict: false });
       const user = await this.userService.findById(decoded.id);
 
