@@ -66,7 +66,7 @@ export class AuthController {
     try {
       const decoded = this.jwtService.verify(refreshToken, {
         secret: fs.readFileSync(
-          'C:/Users/Usuario/Desktop/biapp/keys/private_key.pem',
+          './keys/private_key.pem',
           'utf-8',
         ),
       });
@@ -84,7 +84,7 @@ export class AuthController {
         {
           expiresIn: '1h',
           secret: fs.readFileSync(
-            'C:/Users/Usuario/Desktop/biapp/keys/p_key.pem',
+            './keys/private_key.pem',
             'utf-8',
           ),
         },
