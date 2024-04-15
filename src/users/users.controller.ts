@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Query,
+  Patch,
   ParseIntPipe,
   Put,
   UploadedFile,
@@ -55,9 +56,9 @@ export class UsersController {
     return await this.userService.create(createUserDto);
   }
 
-  @Put()
+  @Patch()
   async updateUser(
-    @UserLogged('id') userId: string,
+    @UserLogged('id') studentId: string,
     @Body() updateUserDto: UpdateAccountDtoSchema,
     @UploadedFile(
       new ParseFilePipeBuilder()
@@ -74,14 +75,14 @@ export class UsersController {
     file?: Express.Multer.File,
   ) {
     return await this.userService.updateUser(
-      userId,
+      studentId,
       updateUserDto,
       file.buffer.toString(),
     );
   }
 
-  @Put('/delete')
-  async deleteUser(@UserLogged('id') userId: string) {
-    return await this.userService.deleteUser(userId);
+  @Patch('/delete')
+  async deleteUser(@UserLogged('id') studentId: string) {
+    return await this.userService.deleteUser(studentId);
   }
 }

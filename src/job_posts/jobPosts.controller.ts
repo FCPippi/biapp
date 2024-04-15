@@ -13,12 +13,12 @@ export class JobPostsController {
 
   @Post()
   async create(
-    @UserLogged('id') userId: string,
+    @UserLogged('id') studentId: string,
     @UserLogged('graduation') userCurso: Graduation,
     @Body() createJobPostDto: CreateJobPostDtoSchema,
   ) {
     return await this.jobPostsService.create(
-      userId,
+      studentId,
       userCurso,
       createJobPostDto,
     );
@@ -35,18 +35,18 @@ export class JobPostsController {
   }
 
   @Put(':id')
-  async remove(@UserLogged('id') userId: string, @Param('id') id: string) {
-    return await this.jobPostsService.remove(userId, id);
+  async remove(@UserLogged('id') studentId: string, @Param('id') id: string) {
+    return await this.jobPostsService.remove(studentId, id);
   }
 
   @Put(':id')
   async updateJob(
-    @UserLogged('id') userId: string,
+    @UserLogged('id') studentId: string,
     @Param('id') jobId: string,
     @Body() updateJobPostDto: UpdateJobPostDtoSchema,
   ) {
     return await this.jobPostsService.updateJob(
-      userId,
+      studentId,
       jobId,
       updateJobPostDto,
     );

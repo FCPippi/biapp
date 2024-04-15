@@ -20,7 +20,7 @@ export class JobRequestsModule implements NestModule {
       .apply(AuthMiddleware)
       .forRoutes(
         { path: 'job-requests/*', method: RequestMethod.POST },
-        { path: 'job-requests/*', method: RequestMethod.PUT },
+        { path: 'job-requests/*', method: RequestMethod.PATCH },
       );
   }
 }

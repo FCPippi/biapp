@@ -66,7 +66,7 @@ export class JobPostsService {
     });
   }
 
-  async remove(userId: string, idJob: string): Promise<JobPost> {
+  async remove(studentId: string, idJob: string): Promise<JobPost> {
     const job = await this.prisma.jobPost.findUnique({
       where: { id: idJob },
     });
@@ -75,7 +75,7 @@ export class JobPostsService {
       throw new NotFoundException(`Job with ID "${idJob}" not found`);
     }
 
-    if (job.studentId !== userId) {
+    if (job.studentId !== studentId) {
       throw new UnauthorizedException(
         "You don't have permission to update this job",
       );
@@ -89,7 +89,7 @@ export class JobPostsService {
   }
 
   async updateJob(
-    userId: string,
+    studentId: string,
     jobId: string,
     updateJobDto: UpdateJobPostDtoSchema,
   ) {
@@ -101,7 +101,7 @@ export class JobPostsService {
       throw new NotFoundException(`Job with ID "${jobId}" not found`);
     }
 
-    if (job.studentId !== userId) {
+    if (job.studentId !== studentId) {
       throw new UnauthorizedException(
         "You don't have permission to update this job",
       );

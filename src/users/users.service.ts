@@ -91,9 +91,9 @@ export class UsersService {
     });
   }
 
-  async loadUserInfo(userId: string) {
+  async loadUserInfo(studentId: string) {
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: studentId },
       include: {
         ratingsGiven: true,
         ratingsReceived: true,
@@ -107,17 +107,17 @@ export class UsersService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    const avgRating = await this.getUserRatingAverage(userId)
+    const avgRating = await this.getUserRatingAverage(studentId)
 
     return {...user, avgRating }
   }
 
   async updateUser(
-    userId: string,
+    studentId: string,
     updateUserDto: UpdateAccountDtoSchema,
     imageUrl?: string,
   ): Promise<User> {
-    const user = await this.loadUserInfo(userId);
+    const user = await this.loadUserInfo(studentId);
 
     const { name, birthdate, graduation, gender } = updateUserDto;
 
@@ -154,9 +154,9 @@ export class UsersService {
     return rating;
   }
 
-  async getUserRatingAverage(userId: string): Promise<number> {
+  async getUserRatingAverage(studentId: string): Promise<number> {
     const ratings = await this.prisma.rating.findMany({
-      where: { recipientId: userId },
+      where: { recipientId: studentId },
     });
 
     if (ratings.length === 0) {
@@ -169,8 +169,8 @@ export class UsersService {
     return average;
   }
 
-  async deleteUser(userId: string) {
-    const user = await this.loadUserInfo(userId);
+  async deleteUser(studentId: string) {
+    const user = await this.loadUserInfo(studentId);
 
     return await this.prisma.user.update({
       where: { id: user.id },

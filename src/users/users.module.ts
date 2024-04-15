@@ -20,7 +20,7 @@ export class UsersModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes(
-        { path: '*', method: RequestMethod.PUT },
+        { path: '*', method: RequestMethod.PATCH },
         { path: 'users/rating', method: RequestMethod.POST },
       );
   }

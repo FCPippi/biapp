@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -46,8 +47,8 @@ export class JobRequestsController {
     return await this.jobRequestsService.create(studentId, createJobRequestDto);
   }
 
-  @Put(':id')
-  async remove(@UserLogged('id') userId: string, @Param('id') id: string) {
-    return await this.jobRequestsService.remove(userId, id);
+  @Patch(':id')
+  async remove(@UserLogged('id') studentId: string, @Param('id') id: string) {
+    return await this.jobRequestsService.remove(studentId, id);
   }
 }
