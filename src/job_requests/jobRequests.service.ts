@@ -31,20 +31,24 @@ export class JobRequestsService {
     orderBy?: Prisma.JobRequestOrderByWithRelationInput;
   }): Promise<JobRequest[]> {
     const { skip, take, cursor, where, orderBy } = params;
-
-    where.isClosed = false;
+    const effectiveWhere = {
+      ...where,
+      isClosed: false,
+    };
 
     return await this.prisma.jobRequest.findMany({
       skip,
       take,
       cursor,
-      where,
+      where: effectiveWhere,
       orderBy,
     });
   }
-
   async findAll(): Promise<JobRequest[]> {
-    return await this.prisma.jobRequest.findMany();
+    const jobs = await this.prisma.jobRequest.findMany({
+      where: { isClosed: false },
+    });
+    return jobs;
   }
 
   async remove(studentId: string, idJob: string): Promise<JobRequest> {

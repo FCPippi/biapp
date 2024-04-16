@@ -17,8 +17,8 @@ export class JobRequestsController {
 
   @Get()
   async getJobRequests(
-    @Query('skip', ParseIntPipe) skip?: number,
-    @Query('take', ParseIntPipe) take?: number,
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number,
     @Query('cursor') cursor?: string,
     @Query('where') where?: string,
     @Query('orderBy') orderBy?: string,

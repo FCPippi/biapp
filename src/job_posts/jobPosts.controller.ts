@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { JobPostsService } from './jobPosts.service';
 import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
@@ -25,19 +34,34 @@ export class JobPostsController {
   }
 
   @Get()
-  async findJobs(
-    @Query('id') id?: string,
-    @Query('studentId') studentId?: string,
+  async getJobRequests(
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number,
+    @Query('cursor') cursor?: string,
+    @Query('where') where?: string,
+    @Query('orderBy') orderBy?: string,
   ) {
-    if (id) {
-      return this.jobPostsService.findOne(id);
-    }
+    const defaultSkip = 0;
+    const defaultTake = 10;
 
-    if (studentId) {
-      return this.jobPostsService.findAllByStudent(studentId);
-    }
+    const params = {
+      skip: skip ?? defaultSkip,
+      take: take ?? defaultTake,
+      cursor: cursor ? JSON.parse(cursor) : undefined,
+      where: where ? this.parseWhereParam(where) : undefined,
+      orderBy: orderBy ? JSON.parse(orderBy) : undefined,
+    };
+    return await this.jobPostsService.findMany(params);
+  }
 
-    return this.jobPostsService.findAll();
+  private parseWhereParam(where: string): any {
+    const whereObj = JSON.parse(where);
+    return { ...whereObj, isClosed: false };
+  }
+
+  @Get('/all')
+  async getAll() {
+    return await this.jobPostsService.findMany({});
   }
 
   @Put(':id')

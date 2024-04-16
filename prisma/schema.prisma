@@ -119,13 +119,13 @@ model Message {
 
 model Report {
   id           String   @id @default(uuid())
-  reporterId   String   // ID do usuário que reportou
+  reporterId   String  
 
-  reportedId   String   // ID do objeto reportado
-  reportedType String   // Tipo do objeto reportado: User, JobRequest, JobPost
+  reportedId   String  
+  reportedType String   
 
-  reason       String   // Motivo do reporte
-
+  reason       String   
+  
   createdAt    DateTime @default(now())
 
   reporter     User     @relation(fields: [reporterId], references: [id])

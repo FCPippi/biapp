@@ -1,6 +1,4 @@
 import {
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -8,7 +6,7 @@ import {
 import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UpdateJobPostDtoSchema } from './dto/update-jobPost.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { Graduation, JobPost, Prisma } from '@prisma/client';
+import { Graduation, JobPost, JobRequest, Prisma } from '@prisma/client';
 
 @Injectable()
 export class JobPostsService {
@@ -34,43 +32,24 @@ export class JobPostsService {
     return jobs;
   }
 
-  async findAllByStudent(studentId: string): Promise<JobPost[]> {
-    return await this.prisma.jobPost.findMany({
-      where: {
-        studentId, // Filtra por studentId
-        isClosed: false, // Considera apenas os JobPosts que não estão fechados
-      },
-    });
-  }
-
-  async findOne(idJob: string): Promise<JobPost> {
-    const job = await this.prisma.jobPost.findUnique({
-      where: { id: idJob, isClosed: false },
-    });
-    if (!job) {
-      throw new HttpException('Job não encontrado', HttpStatus.BAD_REQUEST);
-    }
-    return job;
-  }
-
   async findMany(params: {
     skip?: number;
     take?: number;
-    cursor?: Prisma.JobPostWhereUniqueInput;
-    where?: Prisma.JobPostWhereInput;
-    orderBy?: Prisma.JobPostOrderByWithRelationInput;
-  }): Promise<JobPost[]> {
+    cursor?: Prisma.JobRequestWhereUniqueInput;
+    where?: Prisma.JobRequestWhereInput;
+    orderBy?: Prisma.JobRequestOrderByWithRelationInput;
+  }): Promise<JobRequest[]> {
     const { skip, take, cursor, where, orderBy } = params;
+    const effectiveWhere = {
+      ...where,
+      isClosed: false,
+    };
 
-    if (where) {
-      where.isClosed = false;
-    }
-
-    return await this.prisma.jobPost.findMany({
+    return await this.prisma.jobRequest.findMany({
       skip,
       take,
       cursor,
-      where,
+      where: effectiveWhere,
       orderBy,
     });
   }
