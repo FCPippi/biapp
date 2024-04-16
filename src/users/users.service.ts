@@ -8,7 +8,7 @@ import {
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { Prisma, Rating, User } from '@prisma/client';
+import { Prisma, Rating, Report, User } from '@prisma/client';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
 //import { v4 as uuidv4 } from 'uuid';
@@ -130,9 +130,10 @@ export class UsersService {
 
   async rateUser(
     authorId: string,
+    recipientId: string,
     rateUserDto: RateAccountDtoSchema,
   ): Promise<Rating> {
-    const { recipientId, value, comment } = rateUserDto;
+    const { value, comment } = rateUserDto;
 
     if (authorId === recipientId) {
       throw new HttpException(
@@ -178,5 +179,17 @@ export class UsersService {
         isDeleted: true,
       },
     });
+  }
+
+  async report(
+    reporterId: string,
+    reportedType: string,
+    reportedId: string,
+    reason: string,
+  ): Promise<Report> {
+    const report = await this.prisma.report.create({
+      data: { reporterId, reportedType, reportedId, reason },
+    });
+    return report;
   }
 }

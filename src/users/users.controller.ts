@@ -9,6 +9,7 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
@@ -42,12 +43,13 @@ export class UsersController {
   async getLoggedUser(@UserLogged('id') studentId: string) {
     return await this.userService.loadUserInfo(studentId);
   }
-  @Post('/rating')
+  @Post(':recipientId/rating')
   async rateUser(
     @UserLogged('id') userFrom: string,
+    @Param('recipientId') recipientId: string,
     @Body() rateUserDto: RateAccountDtoSchema,
   ) {
-    return await this.userService.rateUser(userFrom, rateUserDto);
+    return await this.userService.rateUser(userFrom, recipientId, rateUserDto);
   }
 
   @Post()
@@ -83,5 +85,20 @@ export class UsersController {
   @Patch('/delete')
   async deleteUser(@UserLogged('id') studentId: string) {
     return await this.userService.deleteUser(studentId);
+  }
+
+  @Post('/report/:reportedType/:reportedId')
+  async report(
+    @UserLogged('id') reporterId,
+    @Param('reportedType') reportedType: string,
+    @Param('reportedId') reportedId: string,
+    @Body() reason: string,
+  ) {
+    return await this.userService.report(
+      reporterId,
+      reportedType,
+      reportedId,
+      reason,
+    );
   }
 }

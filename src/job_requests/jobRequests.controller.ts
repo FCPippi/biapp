@@ -5,7 +5,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { JobRequestsService } from './jobRequests.service';
