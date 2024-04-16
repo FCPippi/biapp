@@ -28,4 +28,21 @@ export class AdminController {
   async getAllUsersInfo() {
     return await this.adminService.getAllUserInfo();
   }
+
+  @Get('/reports/users')
+  async getUserReports() {
+    return await this.adminService.getUserReports();
+  }
+
+  // Adiciona um novo endpoint para buscar jobPosts reportados
+  @Get('/reports/jobPosts')
+  async getJobPostReports() {
+    return await this.adminService.getJobPostReports();
+  }
+
+  // Adiciona um novo endpoint para buscar jobRequests reportados
+  @Get('/reports/jobRequests')
+  async getJobRequestReports() {
+    return await this.adminService.getJobRequestReports();
+  }
 }
