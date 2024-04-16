@@ -34,6 +34,15 @@ export class JobPostsService {
     return jobs;
   }
 
+  async findAllByStudent(studentId: string): Promise<JobPost[]> {
+    return await this.prisma.jobPost.findMany({
+      where: {
+        studentId, // Filtra por studentId
+        isClosed: false, // Considera apenas os JobPosts que não estão fechados
+      },
+    });
+  }
+
   async findOne(idJob: string): Promise<JobPost> {
     const job = await this.prisma.jobPost.findUnique({
       where: { id: idJob, isClosed: false },

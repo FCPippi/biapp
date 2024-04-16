@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Query } from '@nestjs/common';
 import { JobPostsService } from './jobPosts.service';
 import { CreateJobPostDtoSchema } from './dto/create-jobPost.dto';
 import { UserLogged } from 'src/users/decorators/user.decorator';
@@ -25,13 +25,19 @@ export class JobPostsController {
   }
 
   @Get()
-  findAll() {
-    return this.jobPostsService.findAll();
-  }
+  async findJobs(
+    @Query('id') id?: string,
+    @Query('studentId') studentId?: string,
+  ) {
+    if (id) {
+      return this.jobPostsService.findOne(id);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobPostsService.findOne(id);
+    if (studentId) {
+      return this.jobPostsService.findAllByStudent(studentId);
+    }
+
+    return this.jobPostsService.findAll();
   }
 
   @Put(':id')
