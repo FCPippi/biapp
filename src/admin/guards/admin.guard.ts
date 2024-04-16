@@ -26,7 +26,7 @@ export class AdminGuard implements CanActivate {
       const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf-8');
       const decoded: any = jwt.verify(token[1], privateKey);
 
-      if (decoded.sub.role !== 'admin') {
+      if (decoded.sub.role !== 'ADMIN') {
         throw new UnauthorizedException('Acesso restrito a administradores');
       }
 

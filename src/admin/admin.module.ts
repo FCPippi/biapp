@@ -7,13 +7,12 @@ import {
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
 import { AuthMiddleware } from 'src/shared/auth/auth.middleware';
+import { PrismaModule } from 'src/shared/prisma/prisma.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [AdminController],
   providers: [AdminService],
 })
-export class AdminModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(AdminController);
-  }
-}
+export class AdminModule {}
