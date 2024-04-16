@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminGuard } from './guards/admin.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('admin')
 @UseGuards(AdminGuard)
 export class AdminController {

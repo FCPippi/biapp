@@ -47,13 +47,14 @@ export class AdminService {
       where: { reportedType: 'user' },
     });
   
-    const users = await Promise.all(userReports.map(async (report) => {
-      return await this.prisma.user.findUnique({
+    const usersWithReports = await Promise.all(userReports.map(async (report) => {
+      const user = await this.prisma.user.findUnique({
         where: { id: report.reportedId },
       });
+      return user ? { user, reportDetails: report } : null;
     }));
   
-    return users.filter(user => user !== null);
+    return usersWithReports.filter(userWithReport => userWithReport !== null);
   }
 
   async getJobPostReports() {
@@ -61,13 +62,14 @@ export class AdminService {
       where: { reportedType: 'jobPost' },
     });
   
-    const jobPosts = await Promise.all(jobPostReports.map(async (report) => {
-      return await this.prisma.jobPost.findUnique({
+    const jobPostsWithReports = await Promise.all(jobPostReports.map(async (report) => {
+      const jobPost = await this.prisma.jobPost.findUnique({
         where: { id: report.reportedId },
       });
+      return jobPost ? { jobPost, reportDetails: report } : null;
     }));
   
-    return jobPosts.filter(jobPost => jobPost !== null);
+    return jobPostsWithReports.filter(jobPostWithReport => jobPostWithReport !== null);
   }
 
   async getJobRequestReports() {
@@ -75,12 +77,13 @@ export class AdminService {
       where: { reportedType: 'jobRequest' },
     });
   
-    const jobRequests = await Promise.all(jobRequestReports.map(async (report) => {
-      return await this.prisma.jobRequest.findUnique({
+    const jobRequestsWithReports = await Promise.all(jobRequestReports.map(async (report) => {
+      const jobRequest = await this.prisma.jobRequest.findUnique({
         where: { id: report.reportedId },
       });
+      return jobRequest ? { jobRequest, reportDetails: report } : null;
     }));
   
-    return jobRequests.filter(jobRequest => jobRequest !== null);
+    return jobRequestsWithReports.filter(jobRequestWithReport => jobRequestWithReport !== null);
   }
 }
