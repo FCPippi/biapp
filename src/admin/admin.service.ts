@@ -31,8 +31,11 @@ export class AdminService {
     return updatedUser;
   }
 
-  async getAllUserInfo() {
+  async getAllUserInfo(page: number, limit: number) {
+    const skip = (page - 1) * limit;
     return await this.prisma.user.findMany({
+      take: limit,
+      skip: skip,
       include: {
         ratingsGiven: true,
         ratingsReceived: true,

@@ -5,6 +5,9 @@ import {
   UseGuards,
   Put,
   Get,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminGuard } from './guards/admin.guard';
@@ -27,8 +30,11 @@ export class AdminController {
   }
 
   @Get('/users')
-  async getAllUsersInfo() {
-    return await this.adminService.getAllUserInfo();
+  async getAllUsersInfo(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return await this.adminService.getAllUserInfo(page, limit);
   }
 
   @Get('/reports/users')
