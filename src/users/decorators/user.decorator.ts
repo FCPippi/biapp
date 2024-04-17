@@ -15,8 +15,6 @@ export const UserLogged = createParamDecorator(
 
     const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf-8');
     const decoded: any = jwt.verify(token[1], privateKey);
-    console.log(decoded.sub);
-    console.log(decoded.sub[data]);
 
     return data ? decoded.sub[data] : decoded.sub.user;
   },
