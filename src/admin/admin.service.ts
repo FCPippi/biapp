@@ -60,6 +60,7 @@ export class AdminService {
         ratingsReceived: true,
         jobPosts: true,
         jobRequests: true,
+        reports: true,
       },
     });
   }

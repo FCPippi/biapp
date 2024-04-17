@@ -10,6 +10,7 @@ import { JobRequest, Prisma } from '@prisma/client';
 @Injectable()
 export class JobRequestsService {
   constructor(private prisma: PrismaService) {}
+
   async create(
     studentId: string,
     createJobRequestDto: CreateJobRequestDtoSchema,
@@ -44,6 +45,7 @@ export class JobRequestsService {
       orderBy,
     });
   }
+
   async findAll(): Promise<JobRequest[]> {
     const jobs = await this.prisma.jobRequest.findMany({
       where: { isClosed: false },
@@ -65,6 +67,7 @@ export class JobRequestsService {
         "You don't have permission to update this job",
       );
     }
+
     return await this.prisma.jobRequest.update({
       where: job,
       data: {

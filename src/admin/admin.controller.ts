@@ -55,7 +55,6 @@ export class AdminController {
     );
   }
 
-
   @Get('/reports/users')
   async getUserReports() {
     return await this.adminService.getUserReports();
