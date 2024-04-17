@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Role, User } from '@prisma/client';
+import { Gender, Graduation, Role, User } from '@prisma/client';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 
 @Injectable()
@@ -31,11 +31,30 @@ export class AdminService {
     return updatedUser;
   }
 
-  async getAllUserInfo(page: number, limit: number) {
+  async getAllUserInfo(
+    page: number,
+    limit: number,
+    name?: string,
+    email?: string,
+    graduation?: Graduation,
+    gender?: Gender,
+    role?: Role,
+    isDeleted?: boolean,
+    emailVerified?: boolean,
+  ) {
     const skip = (page - 1) * limit;
     return await this.prisma.user.findMany({
       take: limit,
       skip: skip,
+      where: {
+        name: name ? { contains: name, mode: 'insensitive' } : undefined,
+        email: email ? { equals: email, mode: 'insensitive' } : undefined,
+        graduation: graduation ? graduation : undefined,
+        gender: gender ? gender : undefined,
+        role: role ? role : undefined,
+        isDeleted: isDeleted !== undefined ? isDeleted : undefined,
+        emailVerified: emailVerified !== undefined ? emailVerified : undefined,
+      },
       include: {
         ratingsGiven: true,
         ratingsReceived: true,

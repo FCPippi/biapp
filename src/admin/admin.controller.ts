@@ -12,6 +12,7 @@ import {
 import { AdminService } from './admin.service';
 import { AdminGuard } from './guards/admin.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Gender, Graduation, Role } from '@prisma/client';
 
 @ApiBearerAuth()
 @Controller('admin')
@@ -33,9 +34,27 @@ export class AdminController {
   async getAllUsersInfo(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('name') name?: string,
+    @Query('email') email?: string,
+    @Query('graduation') graduation?: Graduation,
+    @Query('gender') gender?: Gender,
+    @Query('role') role?: Role,
+    @Query('isDeleted') isDeleted?: boolean,
+    @Query('emailVerified') emailVerified?: boolean,
   ) {
-    return await this.adminService.getAllUserInfo(page, limit);
+    return await this.adminService.getAllUserInfo(
+      page,
+      limit,
+      name,
+      email,
+      graduation,
+      gender,
+      role,
+      isDeleted,
+      emailVerified,
+    );
   }
+
 
   @Get('/reports/users')
   async getUserReports() {
