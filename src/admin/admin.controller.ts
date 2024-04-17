@@ -3,7 +3,7 @@ import {
   Param,
   Delete,
   UseGuards,
-  Patch,
+  Put,
   Get,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
@@ -21,7 +21,7 @@ export class AdminController {
     return await this.adminService.deleteUser(studentId);
   }
 
-  @Patch('/users/:id/admin')
+  @Put('/users/:id/admin')
   async setAdmin(@Param('id') userId: string) {
     return await this.adminService.setAdmin(userId);
   }
