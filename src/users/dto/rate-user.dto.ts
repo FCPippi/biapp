@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const RateAccountDto = z.object({
-  value: z.coerce.number().int().lte(5).gte(0),
+  value: z.coerce.number().int().lte(5).gte(1),
   comment: z.string().optional(),
 });
 
