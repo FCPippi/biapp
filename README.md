@@ -29,17 +29,14 @@
 ## Installation
 
 ```bash
- $ ./scripts/start-server.sh
+ $ npm install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
+$ ./scripts/start-server.sh
 
 # production mode
 $ npm run start:prod
