@@ -29,7 +29,7 @@
 ## Installation
 
 ```bash
-$ npm install
+ $ ./scripts/start-server.sh
 ```
 
 ## Running the app
