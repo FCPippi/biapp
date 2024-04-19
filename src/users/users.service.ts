@@ -13,6 +13,12 @@ import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
 //import { v4 as uuidv4 } from 'uuid';
 
+export interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -74,22 +80,40 @@ export class UsersService {
     cursor?: Prisma.UserWhereUniqueInput;
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
-  }): Promise<User[]> {
+  }): Promise<UserInfo[]> {
     const { skip, take, cursor, where, orderBy } = params;
-
+  
     const whereClause: Prisma.UserWhereInput = {
       ...where,
       isDeleted: false,
     };
-
-    return await this.prisma.user.findMany({
+  
+    const users = await this.prisma.user.findMany({
       skip,
       take,
       cursor,
       where: whereClause,
       orderBy,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        birthdate: true,
+        graduation: true,
+        gender: true,
+      }
     });
+  
+    const usersWithRating = await Promise.all(
+      users.map(async (user) => {
+        const avgRating = await this.getUserRatingAverage(user.id);
+        return { ...user, avgRating };
+      })
+    );
+  
+    return usersWithRating;
   }
+   
 
   async loadUserInfo(studentId: string) {
     const user = await this.prisma.user.findUnique({
