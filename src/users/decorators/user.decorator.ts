@@ -7,8 +7,6 @@ export const UserLogged = createParamDecorator(
   (data: any, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
 
-    console.log(req.headers.authorization);
-
     const token = req.headers.authorization
       ? (req.headers.authorization as string).split(' ')
       : null;
