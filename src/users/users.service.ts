@@ -8,9 +8,18 @@ import {
 import { hash } from 'bcryptjs';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { Prisma, Rating, Report, User } from '@prisma/client';
+import {
+  Gender,
+  Graduation,
+  Prisma,
+  Rating,
+  Report,
+  Role,
+  User,
+} from '@prisma/client';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
+import { ReportDtoSchema } from './dto/report.dto';
 //import { v4 as uuidv4 } from 'uuid';
 
 export interface UserInfo {
@@ -74,46 +83,41 @@ export class UsersService {
     });
   } */
 
-  async findMany(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.UserWhereUniqueInput;
-    where?: Prisma.UserWhereInput;
-    orderBy?: Prisma.UserOrderByWithRelationInput;
-  }): Promise<UserInfo[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-  
-    const whereClause: Prisma.UserWhereInput = {
-      ...where,
-      isDeleted: false,
-    };
-  
+  async findMany(
+    page: number,
+    limit: number,
+    name?: string,
+    email?: string,
+    graduation?: Graduation,
+    gender?: Gender,
+    role?: Role,
+    isDeleted?: boolean,
+    emailVerified?: boolean,
+  ) {
+    const skip = (page - 1) * limit;
     const users = await this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where: whereClause,
-      orderBy,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        birthdate: true,
-        graduation: true,
-        gender: true,
-      }
+      take: limit,
+      skip: skip,
+      where: {
+        name: name ? { contains: name, mode: 'insensitive' } : undefined,
+        email: email ? { equals: email, mode: 'insensitive' } : undefined,
+        graduation: graduation ? graduation : undefined,
+        gender: gender ? gender : undefined,
+        role: role ? role : undefined,
+        isDeleted: isDeleted !== undefined ? isDeleted : undefined,
+        emailVerified: emailVerified !== undefined ? emailVerified : undefined,
+      },
     });
-  
+
     const usersWithRating = await Promise.all(
       users.map(async (user) => {
         const avgRating = await this.getUserRatingAverage(user.id);
         return { ...user, avgRating };
-      })
+      }),
     );
-  
+
     return usersWithRating;
   }
-   
 
   async loadUserInfo(studentId: string) {
     const user = await this.prisma.user.findUnique({
@@ -209,8 +213,9 @@ export class UsersService {
     reporterId: string,
     reportedType: string,
     reportedId: string,
-    reason: string,
+    dto: ReportDtoSchema,
   ): Promise<Report> {
+    const { reason } = dto;
     const report = await this.prisma.report.create({
       data: { reporterId, reportedType, reportedId, reason },
     });

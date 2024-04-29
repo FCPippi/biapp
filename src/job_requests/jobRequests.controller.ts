@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -41,7 +42,7 @@ export class JobRequestsController {
   @Post()
   async create(
     @UserLogged('id') studentId: string,
-    createJobRequestDto: CreateJobRequestDtoSchema,
+    @Body() createJobRequestDto: CreateJobRequestDtoSchema,
   ) {
     return await this.jobRequestsService.create(studentId, createJobRequestDto);
   }

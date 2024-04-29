@@ -10,33 +10,43 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
   Param,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountDtoSchema } from './dto/create-user.dto';
 import { UserLogged } from './decorators/user.decorator';
 import { RateAccountDtoSchema } from './dto/rate-user.dto';
 import { UpdateAccountDtoSchema } from './dto/update-user.dto';
+import { ReportDtoSchema } from './dto/report.dto';
+import { Gender, Graduation, Role } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  async getUsers(
-    @Query('skip', ParseIntPipe) skip?: number,
-    @Query('take', ParseIntPipe) take?: number,
-    @Query('cursor') cursor?: string,
-    @Query('where') where?: string,
-    @Query('orderBy') orderBy?: string,
+  async getAllUsersInfo(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('name') name?: string,
+    @Query('email') email?: string,
+    @Query('graduation') graduation?: Graduation,
+    @Query('gender') gender?: Gender,
+    @Query('role') role?: Role,
+    @Query('isDeleted') isDeleted?: boolean,
+    @Query('emailVerified') emailVerified?: boolean,
   ) {
-    const params = {
-      skip: skip ? JSON.parse(cursor) : 0,
-      take: take ? JSON.parse(cursor) : 0,
-      cursor: cursor ? JSON.parse(cursor) : undefined,
-      where: where ? JSON.parse(where) : undefined,
-      orderBy: orderBy ? JSON.parse(orderBy) : undefined,
-    };
-    return await this.userService.findMany(params);
+    return await this.userService.findMany(
+      page,
+      limit,
+      name,
+      email,
+      graduation,
+      gender,
+      role,
+      isDeleted,
+      emailVerified,
+    );
   }
 
   @Get('/logged')
@@ -92,7 +102,7 @@ export class UsersController {
     @UserLogged('id') reporterId,
     @Param('reportedType') reportedType: string,
     @Param('reportedId') reportedId: string,
-    @Body() reason: string,
+    @Body() reason: ReportDtoSchema,
   ) {
     return await this.userService.report(
       reporterId,
