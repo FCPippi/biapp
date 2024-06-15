@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Sistema para demandas e ofertas de serviços utilizando NestJS, Postgres.
 
 ## Installation
 
